@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://bgvfp52gdi8n2"]
+
+[ext_resource type="Script" uid="uid://c77dhm384t7ut" path="res://mundo.gd" id="1_5yunf"]
+[ext_resource type="Script" uid="uid://74eto5irmdkh" path="res://jugador.gd" id="1_ubi47"]
+[ext_resource type="Texture2D" uid="uid://b1n18iov7ej46" path="res://fondo_tunel.png" id="1_xywc0"]
+[ext_resource type="Texture2D" uid="uid://dh2re1tjn01xr" path="res://icon.svg" id="2_xywc0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gejyx"]
+size = Vector2(64, 72.25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xywc0"]
+size = Vector2(63, 71)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5yunf"]
+normal = Vector2(0, 1)
+distance = -606.0
+
+[node name="Node2D" type="Node2D" unique_id=554748721]
+position = Vector2(-3, 0)
+script = ExtResource("1_5yunf")
+
+[node name="Parallax2D" type="Parallax2D" parent="." unique_id=930798378]
+repeat_size = Vector2(1152, 0)
+autoscroll = Vector2(-250, 0)
+repeat_times = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="Parallax2D" unique_id=440925663]
+position = Vector2(576, 324)
+texture = ExtResource("1_xywc0")
+
+[node name="Jugador" type="CharacterBody2D" parent="." unique_id=1671846513]
+z_index = 10
+position = Vector2(369, 382)
+motion_mode = 1
+script = ExtResource("1_ubi47")
+
+[node name="Sprite2D" type="Sprite2D" parent="Jugador" unique_id=369646472]
+position = Vector2(-68, -139.00002)
+scale = Vector2(0.50781244, 0.5781248)
+texture = ExtResource("2_xywc0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador" unique_id=151178905]
+position = Vector2(-70, -138)
+shape = SubResource("RectangleShape2D_gejyx")
+
+[node name="DetectorPeligro" type="Area2D" parent="Jugador" unique_id=747994856]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador/DetectorPeligro" unique_id=471065349]
+position = Vector2(-68.5, -137.5)
+shape = SubResource("RectangleShape2D_xywc0")
+
+[node name="Suelo" type="StaticBody2D" parent="." unique_id=643482594]
+position = Vector2(26, 577)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo" unique_id=828950696]
+position = Vector2(8, 51)
+shape = SubResource("WorldBoundaryShape2D_5yunf")
+
+[node name="Techo" type="StaticBody2D" parent="." unique_id=292702737]
+position = Vector2(32, 36)
+rotation = 3.1415927
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Techo" unique_id=337456284]
+position = Vector2(-8.742278e-07, -10)
+shape = SubResource("WorldBoundaryShape2D_5yunf")
+
+[node name="GeneradorObstaculos" type="Timer" parent="." unique_id=1542807300]
+wait_time = 2.0
+autostart = true
+
+[connection signal="area_entered" from="Jugador/DetectorPeligro" to="Jugador" method="_on_detector_peligro_area_entered"]
+[connection signal="timeout" from="GeneradorObstaculos" to="." method="_on_generador_obstaculos_timeout"]

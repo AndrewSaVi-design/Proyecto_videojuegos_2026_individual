@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://gf6pe8aebsd7"]
+
+[ext_resource type="Script" uid="uid://d3tcmalfrwc00" path="res://obstaculo.gd" id="1_phkyr"]
+[ext_resource type="Texture2D" uid="uid://dh2re1tjn01xr" path="res://icon.svg" id="1_q7004"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_phkyr"]
+size = Vector2(124, 125)
+
+[node name="obstaculo" type="Area2D" unique_id=1264636146 groups=["peligro"]]
+script = ExtResource("1_phkyr")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1352028784]
+texture = ExtResource("1_q7004")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1517158296]
+shape = SubResource("RectangleShape2D_phkyr")

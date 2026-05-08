@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://ujdboc1l8yu4"]
+
+[ext_resource type="Script" uid="uid://cf2bdhbnnsx60" path="res://laser_horizontal.gd" id="1_8gudd"]
+[ext_resource type="Texture2D" uid="uid://dh2re1tjn01xr" path="res://icon.svg" id="2_qtxav"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_soat7"]
+size = Vector2(1234, 18.5)
+
+[node name="LaserHorizontal" type="Area2D" unique_id=500719269 groups=["laser_cian"]]
+script = ExtResource("1_8gudd")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=685609558]
+modulate = Color(1.0009145, 0, 0.0039297324, 1)
+position = Vector2(-2, 3.249839)
+scale = Vector2(9.625, 0.13672127)
+texture = ExtResource("2_qtxav")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1695703440]
+position = Vector2(-1, 2.75)
+shape = SubResource("RectangleShape2D_soat7")
