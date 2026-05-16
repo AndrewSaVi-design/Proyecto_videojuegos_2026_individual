@@ -1,17 +1,19 @@
 [gd_scene format=3 uid="uid://cdxosxyxj7n52"]
 
 [ext_resource type="Script" uid="uid://bvok70nqsbt6b" path="res://laser_cian.gd" id="1_eaag6"]
-[ext_resource type="Texture2D" uid="uid://dh2re1tjn01xr" path="res://icon.svg" id="2_0uhvf"]
+[ext_resource type="Texture2D" uid="uid://b8q3h1m4ngquv" path="res://lasercian.png" id="2_eaag6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ca53j"]
-size = Vector2(64, 2550)
+size = Vector2(43, 2550)
 
 [node name="Lasercian" type="Area2D" unique_id=1148845059 groups=["laser_cian"]]
 script = ExtResource("1_eaag6")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1464548643]
-scale = Vector2(0.5, 20)
-texture = ExtResource("2_0uhvf")
+position = Vector2(1.499999, 0)
+scale = Vector2(0.3515625, 20)
+texture = ExtResource("2_eaag6")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1779978933 groups=["laser_cian"]]
+position = Vector2(1.5, 0)
 shape = SubResource("RectangleShape2D_ca53j")

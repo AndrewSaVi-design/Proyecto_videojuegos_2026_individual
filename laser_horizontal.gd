@@ -1,21 +1,37 @@
 extends Area2D
 
+# Tiempos ajustados: 2.5 segundos de aviso (2 segundos más que antes)
+const TIEMPO_AVISO = 2.5
+const TIEMPO_DISPARO = 1.5
+
+@onready var sprite = $Sprite2D
+@onready var shape = $CollisionShape2D
+
 func _ready():
-	# --- 1. AVISO (El láser aparece clarito) ---
-	modulate.a = 0.3  # Muy transparente
+	# Aviso (transparente e inofensivo)
+	sprite.modulate.a = 0.3
+	shape.set_deferred("disabled", true) 
 	
-	# Espera medio segundo parpadeando (puedes ajustar el tiempo)
-	await get_tree().create_timer(0.5).timeout
+	crear_parpadeo(TIEMPO_AVISO)
 	
-	# --- 2. ACTIVACIÓN (El láser se pone sólido y peligroso) ---
-	modulate.a = 1.0  # Opaco (rojo fuerte)
+	await get_tree().create_timer(TIEMPO_AVISO).timeout
 	
-	# Se queda encendido 1.5 segundos para intentar matar al jugador
-	await get_tree().create_timer(1.5).timeout
+	# Activación (sólido y letal)
+	sprite.modulate.a = 1.0
+	shape.set_deferred("disabled", false)
 	
-	# --- 3. DESAPARECER ---
+	await get_tree().create_timer(TIEMPO_DISPARO).timeout
+	
+	# Desaparece
 	queue_free()
 
-func _process(_delta):
-	# Dejamos esto vacío. Al no tener "position.x -=", el láser NO se moverá.
-	pass
+func _on_area_entered(area: Area2D) -> void:
+	if area.name == "DetectorPeligro":
+		print("¡GAME OVER - Michael electrocutado!")
+		get_tree().reload_current_scene()
+
+func crear_parpadeo(tiempo):
+	var tween = get_tree().create_tween()
+	tween.set_loops(int(tiempo * 10))
+	tween.tween_property(sprite, "modulate:a", 0.1, 0.05)
+	tween.tween_property(sprite, "modulate:a", 0.5, 0.05)

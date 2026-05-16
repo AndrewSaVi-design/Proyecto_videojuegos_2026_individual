@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bjjf6c6p3kxer"]
 
 [ext_resource type="Script" uid="uid://bvok70nqsbt6b" path="res://laser_cian.gd" id="1_ca53j"]
-[ext_resource type="Texture2D" uid="uid://dh2re1tjn01xr" path="res://icon.svg" id="1_sb7x3"]
+[ext_resource type="Texture2D" uid="uid://v1ohn8n28lhy" path="res://lasernaranja.png" id="2_ca53j"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ca53j"]
 size = Vector2(64, 2550)
@@ -12,7 +12,7 @@ script = ExtResource("1_ca53j")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1464548643]
 self_modulate = Color(1, 0.54901963, 0, 1)
 scale = Vector2(0.5, 20)
-texture = ExtResource("1_sb7x3")
+texture = ExtResource("2_ca53j")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1779978933 groups=["laser_cian"]]
 shape = SubResource("RectangleShape2D_ca53j")

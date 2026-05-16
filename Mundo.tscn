@@ -3,13 +3,13 @@
 [ext_resource type="Script" uid="uid://c77dhm384t7ut" path="res://mundo.gd" id="1_5yunf"]
 [ext_resource type="Script" uid="uid://74eto5irmdkh" path="res://jugador.gd" id="1_ubi47"]
 [ext_resource type="Texture2D" uid="uid://b1n18iov7ej46" path="res://fondo_tunel.png" id="1_xywc0"]
-[ext_resource type="Texture2D" uid="uid://dh2re1tjn01xr" path="res://icon.svg" id="2_xywc0"]
+[ext_resource type="Texture2D" uid="uid://djqsy6sg67b21" path="res://Drake.png" id="4_gejyx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gejyx"]
 size = Vector2(64, 72.25)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xywc0"]
-size = Vector2(63, 71)
+size = Vector2(63, 83)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5yunf"]
 normal = Vector2(0, 1)
@@ -35,9 +35,9 @@ motion_mode = 1
 script = ExtResource("1_ubi47")
 
 [node name="Sprite2D" type="Sprite2D" parent="Jugador" unique_id=369646472]
-position = Vector2(-68, -139.00002)
-scale = Vector2(0.50781244, 0.5781248)
-texture = ExtResource("2_xywc0")
+position = Vector2(-69.99999, -133)
+scale = Vector2(0.2481752, 0.23204426)
+texture = ExtResource("4_gejyx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador" unique_id=151178905]
 position = Vector2(-70, -138)
@@ -46,7 +46,7 @@ shape = SubResource("RectangleShape2D_gejyx")
 [node name="DetectorPeligro" type="Area2D" parent="Jugador" unique_id=747994856]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador/DetectorPeligro" unique_id=471065349]
-position = Vector2(-68.5, -137.5)
+position = Vector2(-68.5, -131.5)
 shape = SubResource("RectangleShape2D_xywc0")
 
 [node name="Suelo" type="StaticBody2D" parent="." unique_id=643482594]
