@@ -25,10 +25,12 @@ func _ready():
 	# Desaparece
 	queue_free()
 
+# Esta es la función que reacciona cuando toca al jugador
 func _on_area_entered(area: Area2D) -> void:
-	if area.name == "DetectorPeligro":
+	if area.name == "DetectorPeligro" or area.is_in_group("Player"):
 		print("¡GAME OVER - Michael electrocutado!")
-		get_tree().reload_current_scene()
+		# Cambiamos el reinicio de escena por tu nueva pantalla de Game Over
+		get_tree().change_scene_to_file("res://game_over.tscn")
 
 func crear_parpadeo(tiempo):
 	var tween = get_tree().create_tween()

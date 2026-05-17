@@ -52,4 +52,4 @@ func crear_peligro(escena, es_horizontal, altura_especifica = 0):
 	else:
 		instancia.position = Vector2(1200, randf_range(100, 500))
 		
-	add_child(instancia)
+	add_child(instancia) 

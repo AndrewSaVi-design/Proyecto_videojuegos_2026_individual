@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cbsuoos0blhev"]
+
+[ext_resource type="Script" uid="uid://fe7tone4w02j" path="res://intro.gd" id="1_ayt76"]
+[ext_resource type="VideoStream" uid="uid://btypvekamca37" path="res://aero_rush_IA.ogv" id="2_7a8ye"]
+
+[node name="Intro" type="Control" unique_id=499349653]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ayt76")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=1859743394]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("2_7a8ye")
+autoplay = true
+expand = true
+
+[connection signal="finished" from="VideoStreamPlayer" to="." method="_on_video_stream_player_finished"]
