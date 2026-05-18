@@ -10,8 +10,8 @@ size = Vector2(43, 2550)
 script = ExtResource("1_eaag6")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1464548643]
-position = Vector2(1.499999, 0)
-scale = Vector2(0.3515625, 20)
+position = Vector2(1, 0)
+scale = Vector2(1.0810813, 20)
 texture = ExtResource("2_eaag6")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1779978933 groups=["laser_cian"]]
