@@ -1,9 +1,22 @@
 extends Area2D
 
-var velocidad = 400 
-
 func _process(delta):
-	position.x -= velocidad * delta
+	var velocidad_base = 300.0 # Velocidad inicial suave
+	var velocidad_final = velocidad_base
+	
+	# ESCALADO DE DIFICULTAD REAL HASTA LOS 400 KM
+	var mundo = get_tree().current_scene
+	if mundo and "distancia" in mundo:
+		if mundo.distancia >= 400:
+			velocidad_final += 400.0 # Extremo a los 400 km (Velocidad: 700)
+		elif mundo.distancia >= 200:
+			velocidad_final += 250.0 # Difícil a los 200 km (Velocidad: 550)
+		elif mundo.distancia >= 50:
+			velocidad_final += 120.0 # Intermedio a los 50 km (Velocidad: 420)
+
+	# Se mueve con la velocidad calculada
+	position.x -= velocidad_final * delta
+	
 	if position.x < -100:
 		queue_free()
 
@@ -15,21 +28,11 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Jugador" or body.is_in_group("Player"):
 		verificar_polaridad(body)
 
-# Función que decide si Michael sobrevive o va al Game Over
-# Función que decide si Michael sobrevive o va al Game Over
 func verificar_polaridad(jugador):
-	# EL CHISMOSO: Imprimirá los datos exactos del choque en la consola
 	print("--- CHOQUE DETECTADO ---")
-	print("Grupos de este láser: ", get_groups())
-	print("¿El traje de Michael es Cian? (es_cian): ", jugador.es_cian)
-	
 	if is_in_group("laser_cian") and jugador.es_cian == false:
-		print("Resultado: MUERTE (Láser Cian chocó con Traje Naranja)")
 		get_tree().change_scene_to_file("res://game_over.tscn")
-		
 	elif is_in_group("laser_naranja") and jugador.es_cian == true:
-		print("Resultado: MUERTE (Láser Naranja chocó con Traje Cian)")
 		get_tree().change_scene_to_file("res://game_over.tscn")
-		
 	else:
 		print("Resultado: SALVADO (Ambos son del mismo color)")

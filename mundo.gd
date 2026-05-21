@@ -15,6 +15,9 @@ var escena_obstaculo = preload("res://obstaculo.tscn")
 var laserHorizontal = preload("res://laser_horizontal.tscn")
 var escena_moneda = preload("res://moneda.tscn") 
 
+# NUEVO: Cargamos tu barra de contención que rota
+var objetoCircular = preload("res://obstaculo_circular.tscn")
+
 func _process(delta: float) -> void:
 	distancia += delta * 10.0
 	texto_distancia.text = str(int(distancia)) + " km"
@@ -24,32 +27,34 @@ func sumar_moneda() -> void:
 	texto_monedas.text = "Monedas: " + str(monedas)
 
 func _on_generador_obstaculos_timeout() -> void:
-	var suerte = randi() % 12 # Genera un número del 0 al 11
+	var suerte = randi() % 14 # Ampliado a 14 para meter el nuevo peligro
 	
-	# REGLA DE DIFICULTAD (ESTO SE MANTIENE IGUAL)
-	var tiempo_espera_base = 1.2
-	if distancia >= 100:
-		tiempo_espera_base = 0.6 
+	# --- CAMBIO AQUÍ: FRECUENCIA AJUSTADA HASTA LOS 400 KM ---
+	var tiempo_espera_base = 1.2 # Ritmo inicial (0 a 50 km)
+	if distancia >= 400:
+		tiempo_espera_base = 0.4 # Ritmo frenético extremo a los 400 km
+	elif distancia >= 200:
+		tiempo_espera_base = 0.7 # Ritmo rápido a los 200 km
 	elif distancia >= 50:
-		tiempo_espera_base = 0.9 
+		tiempo_espera_base = 0.9 # Ritmo intermedio a los 50 km
 	
-	# --- RULETA ALEATORIA CORREGIDA ---
+	# --- RULETA ALEATORIA ACTUALIZADA ---
 	
-	if suerte < 4: # 1. OBSTÁCULO NORMAL (MÁS FRECUENTE - 33.3% de probabilidad)
+	if suerte < 4: # 1. OBSTÁCULO NORMAL (MÁS FRECUENTE)
 		var nuevo_ob = escena_obstaculo.instantiate()
 		nuevo_ob.position = Vector2(1200, randf_range(150, 450))
 		add_child(nuevo_ob)
 		$GeneradorObstaculos.wait_time = tiempo_espera_base
 		
-	elif suerte < 6: # 2. Laser Cian (16.6% de probabilidad)
+	elif suerte < 6: # 2. Laser Cian
 		crear_peligro(laserCian, false)
 		$GeneradorObstaculos.wait_time = tiempo_espera_base
 		
-	elif suerte < 8: # 3. Laser Naranja (16.6% de probabilidad)
+	elif suerte < 8: # 3. Laser Naranja
 		crear_peligro(laserNaranja, false)
 		$GeneradorObstaculos.wait_time = tiempo_espera_base
 		
-	elif suerte < 9: # 4. LÁSER HORIZONTALES (MUY RARO - 8.3% de probabilidad)
+	elif suerte < 9: # 4. LÁSER HORIZONTALES
 		var y_min = 150
 		var y_max = 400
 		var cantidad = randi_range(1, 2)
@@ -62,22 +67,30 @@ func _on_generador_obstaculos_timeout() -> void:
 			crear_peligro(laserHorizontal, true, h1)
 			crear_peligro(laserHorizontal, true, h2)
 			
-		$GeneradorObstaculos.wait_time = 4.5 # Pausa larga fija para los horizontales
+		$GeneradorObstaculos.wait_time = 4.5 
 		
-	else: # 5. MONEDAS (25% de probabilidad)
+	elif suerte < 11: # 5. MONEDAS (25% de probabilidad)
 		var nueva_moneda = escena_moneda.instantiate()
 		nueva_moneda.position = Vector2(1200, randf_range(180, 420))
 		add_child(nueva_moneda)
 		$GeneradorObstaculos.wait_time = 0.5 
 		
+	else: # 6. NUEVO: OBSTÁCULO ROTATORIO (Se activa con los números 11, 12 y 13)
+		var instancia_circular = objetoCircular.instantiate()
+		instancia_circular.position = Vector2(1200, randf_range(150, 450))
+		# Le damos una inclinación sorpresa al nacer
+		instancia_circular.rotation_degrees = randf_range(0.0, 360.0)
+		add_child(instancia_circular)
+		$GeneradorObstaculos.wait_time = tiempo_espera_base
+		
 	$GeneradorObstaculos.start()
 
-func crear_peligro(escena, es_horizontal, altura_especifica = 0):
+func crear_peligro(escena, es_horizontal, altura_specifica = 0):
 	var instancia = escena.instantiate()
 	
 	if es_horizontal:
 		instancia.position.x = 570
-		instancia.position.y = altura_especifica
+		instancia.position.y = altura_specifica
 	else:
 		instancia.position = Vector2(1200, randf_range(100, 500))
 		
