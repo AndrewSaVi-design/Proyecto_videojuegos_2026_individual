@@ -6,6 +6,7 @@ var es_cian = false
 
 @onready var sprite = $Sprite2D
 
+#Funciones para la fisica
 func _physics_process(delta):
 	# 1. Gravedad constante (empuja hacia abajo)
 	velocity.y += gravedad * delta
