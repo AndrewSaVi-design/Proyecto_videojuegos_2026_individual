@@ -1,5 +1,7 @@
 extends Area2D
 
+var ya_choco = false # <-- NUEVA VARIABLE: Evita que el choque se procese múltiples veces seguidas
+
 func _process(delta):
 	var velocidad_base = 300.0 # Velocidad inicial suave
 	var velocidad_final = velocidad_base
@@ -29,10 +31,28 @@ func _on_body_entered(body: Node2D) -> void:
 		verificar_polaridad(body)
 
 func verificar_polaridad(jugador):
+	print("Argumebnto de polaridad: ", jugador)
+	if ya_choco:
+		return # Si ya registramos una derrota, ignoramos colisiones extra
+		
 	print("--- CHOQUE DETECTADO ---")
-	if is_in_group("laser_cian") and jugador.es_cian == false:
-		get_tree().change_scene_to_file("res://game_over.tscn")
-	elif is_in_group("laser_naranja") and jugador.es_cian == true:
-		get_tree().change_scene_to_file("res://game_over.tscn")
+	
+	# Primero evaluamos las condiciones exactas de Game Over
+	var fallo_cian = is_in_group("laser_cian") and jugador.es_cian == false
+	var fallo_naranja = is_in_group("laser_naranja") and jugador.es_cian == true
+	
+	if fallo_cian or fallo_naranja:
+		ya_choco = true
+		#set_process(false) # Congela el movimiento de este láser para que no siga de largo
+		
+		# Le indicamos al jugador que ejecute su lógica de daño
+		if jugador.has_method("recibir_danio"):
+			jugador.recibir_danio()
+		
+		# Esperamos 1 segundo de manera asíncrona viendo la animación "hurt"
+		#await get_tree().create_timer(1.0).timeout
+		
+		# Cambiamos de escena oficialmente
+		#get_tree().change_scene_to_file("res://game_over.tscn")
 	else:
 		print("Resultado: SALVADO (Ambos son del mismo color)")
