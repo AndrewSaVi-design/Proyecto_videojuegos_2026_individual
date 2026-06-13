@@ -13,6 +13,9 @@ func _physics_process(delta):
 	# Si el personaje está herido, salimos de la función inmediatamente
 	# Esto evita que se mueva o que cambie su animación a "run" o "fly"
 	if esta_herido:
+		velocity.y += gravedad * delta
+		velocity.y = clamp(velocity.y, -300, 400)
+		move_and_slide()
 		return
 		
 	# Gravedad constante (empuja hacia abajo)
@@ -35,6 +38,17 @@ func _physics_process(delta):
 	# Cambio de color
 	if Input.is_action_just_pressed("cambiar_color"):
 		cambiar_traje()
+		
+# NUEVA FUNCIÓN: Activada específicamente por el obstáculo sólido
+func recibir_impacto_bloque():
+	esta_herido = true
+	animated_sprite.play("hurtBlock") # Cambia a la animación de golpe por bloque
+	
+	# El juego continúa ejecutando las físicas de caída durante 1 segundo
+	await get_tree().create_timer(1.5).timeout
+	
+	# Tras el segundo de caída y visualización del daño, cambia la escena
+	get_tree().change_scene_to_file("res://game_over.tscn")
 
 # <-- NUEVA FUNCIÓN: El láser llamará a esto cuando el jugador pierda
 func recibir_danio():
@@ -42,7 +56,7 @@ func recibir_danio():
 	velocity = Vector2.ZERO # Detiene en seco cualquier impulso que traiga
 	animated_sprite.play("hurt")
 	# El jugador ahora maneja su propio tiempo y cambio de escena
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.5).timeout
 	get_tree().change_scene_to_file("res://game_over.tscn")
 
 func cambiar_traje():
