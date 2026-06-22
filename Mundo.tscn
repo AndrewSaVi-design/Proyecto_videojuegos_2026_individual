@@ -3,11 +3,71 @@
 [ext_resource type="Script" uid="uid://c77dhm384t7ut" path="res://mundo.gd" id="1_5yunf"]
 [ext_resource type="Script" uid="uid://74eto5irmdkh" path="res://jugador.gd" id="1_ubi47"]
 [ext_resource type="Texture2D" uid="uid://b1n18iov7ej46" path="res://fondo_tunel.png" id="1_xywc0"]
-[ext_resource type="Texture2D" uid="uid://djqsy6sg67b21" path="res://Drake.png" id="4_gejyx"]
-[ext_resource type="Texture2D" uid="uid://du0gif1sqdi2w" path="res://moto.png" id="5_5yunf"]
+[ext_resource type="Texture2D" uid="uid://bbgw1wdrqdk4w" path="res://Drake30.png" id="4_jlv7k"]
+[ext_resource type="Texture2D" uid="uid://bft83woah15d5" path="res://Drake31.png" id="5_ftdas"]
+[ext_resource type="Texture2D" uid="uid://c3oorfob07ucn" path="res://hurt0.png" id="5_ocdg6"]
+[ext_resource type="Texture2D" uid="uid://br66na221bbmd" path="res://hurt1.png" id="6_jnlhy"]
+[ext_resource type="Texture2D" uid="uid://3j8vbxpcmu3b" path="res://Drake32.png" id="6_ocdg6"]
+[ext_resource type="Texture2D" uid="uid://8ac5kpugnw25" path="res://Drake33.png" id="7_jnlhy"]
+[ext_resource type="Texture2D" uid="uid://c44moi0s52fyn" path="res://hurt2.png" id="7_lb1h3"]
+[ext_resource type="Texture2D" uid="uid://dgy87y3wg8weq" path="res://DrakeHurtBlock.png" id="8_lb1h3"]
+[ext_resource type="Texture2D" uid="uid://cgsjpx5xalkae" path="res://DrakeHurtBlock2.png" id="9_uegni"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lb1h3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_ocdg6")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_ocdg6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_jnlhy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_lb1h3")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_lb1h3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_uegni")
+}],
+"loop": false,
+"name": &"hurtBlock",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_jlv7k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ftdas")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ocdg6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_jnlhy")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gejyx"]
-size = Vector2(64, 72.25)
+size = Vector2(64, 73.125)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xywc0"]
 size = Vector2(63, 83)
@@ -49,22 +109,25 @@ autoscroll = Vector2(-250, 0)
 repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D" unique_id=440925663]
-position = Vector2(576, 324)
+position = Vector2(576, 352.75)
+scale = Vector2(1, 1.0648253)
 texture = ExtResource("1_xywc0")
 
 [node name="Jugador" type="CharacterBody2D" parent="." unique_id=1671846513]
 z_index = 10
-position = Vector2(369, 382)
+position = Vector2(253, 606)
 motion_mode = 1
 script = ExtResource("1_ubi47")
 
-[node name="Sprite2D" type="Sprite2D" parent="Jugador" unique_id=369646472]
-position = Vector2(-69.99999, -133)
-scale = Vector2(0.2481752, 0.23204426)
-texture = ExtResource("4_gejyx")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Jugador" unique_id=2110797005]
+position = Vector2(-69.89082, -138.20616)
+scale = Vector2(0.23866801, 0.24364121)
+sprite_frames = SubResource("SpriteFrames_lb1h3")
+animation = &"hurtBlock"
+frame_progress = 0.7803505
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador" unique_id=151178905]
-position = Vector2(-70, -138)
+position = Vector2(-70, -137.5625)
 shape = SubResource("RectangleShape2D_gejyx")
 
 [node name="DetectorPeligro" type="Area2D" parent="Jugador" unique_id=747994856]
@@ -73,14 +136,8 @@ shape = SubResource("RectangleShape2D_gejyx")
 position = Vector2(-68.5, -131.5)
 shape = SubResource("RectangleShape2D_xywc0")
 
-[node name="SpriteMoto" type="Sprite2D" parent="Jugador" unique_id=519020796]
-visible = false
-position = Vector2(-67.99999, -120.99999)
-scale = Vector2(0.28645837, 0.20847182)
-texture = ExtResource("5_5yunf")
-
 [node name="Suelo" type="StaticBody2D" parent="." unique_id=643482594]
-position = Vector2(26, 577)
+position = Vector2(26, 596)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Suelo" unique_id=828950696]
 position = Vector2(8, 51)
@@ -91,7 +148,7 @@ position = Vector2(32, 36)
 rotation = 3.1415927
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Techo" unique_id=337456284]
-position = Vector2(-8.742278e-07, -10)
+position = Vector2(-5.2453663e-07, -6)
 shape = SubResource("WorldBoundaryShape2D_5yunf")
 
 [node name="GeneradorObstaculos" type="Timer" parent="." unique_id=1542807300]
