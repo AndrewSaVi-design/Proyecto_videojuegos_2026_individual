@@ -8,6 +8,9 @@ var distancia: float = 0.0
 var monedas: int = 0
 @onready var texto_monedas = $Interfaz/TextoMonedas
 
+# --- NUEVA VARIABLE: Guarda en qué kilómetro salió la última moto ---
+var kilometro_ultima_moto: float = -100.0 
+
 # Cargamos las escenas
 var laserCian = preload("res://laserCian.tscn")
 var laserNaranja = preload("res://laserNaranja.tscn")
@@ -15,7 +18,7 @@ var escena_obstaculo = preload("res://obstaculo.tscn")
 var laserHorizontal = preload("res://laser_horizontal.tscn")
 var escena_moneda = preload("res://moneda.tscn") 
 var objetoCircular = preload("res://obstaculo_circular.tscn")
-var escena_moto = preload("res://item_moto.tscn") # Nueva moto
+var escena_moto = preload("res://item_moto.tscn") 
 
 func _process(delta: float) -> void:
 	distancia += delta * 10.0
@@ -26,7 +29,6 @@ func sumar_moneda() -> void:
 	texto_monedas.text = "Monedas: " + str(monedas)
 
 func _on_generador_obstaculos_timeout() -> void:
-	# Aumentamos el rango a 16 para incluir la moto
 	var suerte = randi() % 16 
 	
 	var tiempo_espera_base = 1.2 
@@ -63,11 +65,28 @@ func _on_generador_obstaculos_timeout() -> void:
 		nueva_moneda.position = Vector2(1200, randf_range(180, 420))
 		add_child(nueva_moneda)
 		
-	elif suerte < 13: # 6. MOTO
-		var nueva_moto = escena_moto.instantiate()
-		nueva_moto.position = Vector2(1200, randf_range(180, 420))
-		add_child(nueva_moto)
+	elif suerte < 13: # 6. MOTO (Logica inteligente de reaparición)
+		# Buscamos al jugador de forma segura para saber su estado
+		var jugador = get_node_or_null("Jugador")
+		var jugador_ya_tiene_moto = false
+		if jugador and jugador.en_moto == true:
+			jugador_ya_tiene_moto = true
+			
+		# "Tiempo prudente": Definimos que deben pasar al menos 60 km desde la última moto
+		var paso_tiempo_prudente = (distancia - kilometro_ultima_moto) >= 60.0
 		
+		# SI NO TIENE LA MOTO Y YA PASÓ EL TIEMPO PRUDENTE, LA REAPARECEMOS
+		if not jugador_ya_tiene_moto and paso_tiempo_prudente:
+			var nueva_moto = escena_moto.instantiate()
+			nueva_moto.position = Vector2(1200, randf_range(180, 420))
+			add_child(nueva_moto)
+			kilometro_ultima_moto = distancia # Guardamos el kilómetro actual
+		else:
+			# Si ya tiene moto o apareció hace muy poco, ponemos una moneda en su lugar
+			var nueva_moneda = escena_moneda.instantiate()
+			nueva_moneda.position = Vector2(1200, randf_range(180, 420))
+			add_child(nueva_moneda)
+			
 	else: # 7. OBSTÁCULO ROTATORIO
 		var instancia_circular = objetoCircular.instantiate()
 		instancia_circular.position = Vector2(1200, randf_range(150, 450))

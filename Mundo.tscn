@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://c44moi0s52fyn" path="res://hurt2.png" id="7_lb1h3"]
 [ext_resource type="Texture2D" uid="uid://dgy87y3wg8weq" path="res://DrakeHurtBlock.png" id="8_lb1h3"]
 [ext_resource type="Texture2D" uid="uid://cgsjpx5xalkae" path="res://DrakeHurtBlock2.png" id="9_uegni"]
+[ext_resource type="Texture2D" uid="uid://cdrghmj74e4kw" path="res://moto2.png" id="13_uegni"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lb1h3"]
 animations = [{
@@ -135,6 +136,12 @@ shape = SubResource("RectangleShape2D_gejyx")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador/DetectorPeligro" unique_id=471065349]
 position = Vector2(-68.5, -131.5)
 shape = SubResource("RectangleShape2D_xywc0")
+
+[node name="SpriteMoto" type="Sprite2D" parent="Jugador" unique_id=840153285]
+visible = false
+position = Vector2(-70.25, -130.875)
+scale = Vector2(0.16626215, 0.24115042)
+texture = ExtResource("13_uegni")
 
 [node name="Suelo" type="StaticBody2D" parent="." unique_id=643482594]
 position = Vector2(26, 596)
