@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://74eto5irmdkh" path="res://jugador.gd" id="1_ubi47"]
 [ext_resource type="Texture2D" uid="uid://b1n18iov7ej46" path="res://fondo_tunel.png" id="1_xywc0"]
 [ext_resource type="Texture2D" uid="uid://djqsy6sg67b21" path="res://Drake.png" id="4_gejyx"]
+[ext_resource type="Texture2D" uid="uid://du0gif1sqdi2w" path="res://moto.png" id="5_5yunf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gejyx"]
 size = Vector2(64, 72.25)
@@ -71,6 +72,12 @@ shape = SubResource("RectangleShape2D_gejyx")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador/DetectorPeligro" unique_id=471065349]
 position = Vector2(-68.5, -131.5)
 shape = SubResource("RectangleShape2D_xywc0")
+
+[node name="SpriteMoto" type="Sprite2D" parent="Jugador" unique_id=519020796]
+visible = false
+position = Vector2(-67.99999, -120.99999)
+scale = Vector2(0.28645837, 0.20847182)
+texture = ExtResource("5_5yunf")
 
 [node name="Suelo" type="StaticBody2D" parent="." unique_id=643482594]
 position = Vector2(26, 577)

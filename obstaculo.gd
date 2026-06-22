@@ -22,8 +22,8 @@ func _process(delta):
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.name == "DetectorPeligro" or area.is_in_group("Player"):
-		get_tree().change_scene_to_file("res://game_over.tscn")
+		area.get_parent().recibir_dano()
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Jugador" or body.is_in_group("Player"):
-		get_tree().change_scene_to_file("res://game_over.tscn")
+		body.recibir_dano()
