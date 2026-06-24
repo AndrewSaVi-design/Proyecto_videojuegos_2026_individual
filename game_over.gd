@@ -1,11 +1,13 @@
 extends Control
+@onready var musica_game = $MusicaGame
+func _ready() -> void:
+	musica_game.play()
 
-# Esta función se ejecuta al presionar el botón Reintentar
-func _on_reintentar_pressed() -> void:
+func _on_button_1_pressed() -> void:
 	print("Cargando el juego otra vez...")
 	get_tree().change_scene_to_file("res://Mundo.tscn")
 
-# Esta función se ejecuta al presionar el botón de Volver al Menú
-func _on_menu_pressed() -> void:
+
+func _on_button_2_pressed() -> void:
 	print("Regresando a la intro...")
-	get_tree().change_scene_to_file("res://intro.tscn")
+	get_tree().change_scene_to_file("res://menu_principal.tscn")

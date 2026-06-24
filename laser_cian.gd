@@ -10,11 +10,11 @@ func _process(delta):
 	var mundo = get_tree().current_scene
 	if mundo and "distancia" in mundo:
 		if mundo.distancia >= 400:
-			velocidad_final += 400.0 # Extremo a los 400 km
+			velocidad_final += 400.0 # Extremo a los 400 km (Velocidad: 700)
 		elif mundo.distancia >= 200:
-			velocidad_final += 250.0 # Difícil a los 200 km
+			velocidad_final += 250.0 # Difícil a los 200 km (Velocidad: 550)
 		elif mundo.distancia >= 50:
-			velocidad_final += 120.0 # Intermedio a los 50 km
+			velocidad_final += 120.0 # Intermedio a los 50 km (Velocidad: 420)
 
 	# Se mueve con la velocidad calculada
 	position.x -= velocidad_final * delta
@@ -36,10 +36,6 @@ func verificar_polaridad(jugador):
 		return # Si ya registramos una derrota, ignoramos colisiones extra
 		
 	print("--- CHOQUE DETECTADO ---")
-	if is_in_group("laser_cian") and jugador.es_cian == false:
-		jugador.recibir_dano()
-	elif is_in_group("laser_naranja") and jugador.es_cian == true:
-		jugador.recibir_dano()
 	
 	# Primero evaluamos las condiciones exactas de Game Over
 	var fallo_cian = is_in_group("laser_cian") and jugador.es_cian == false

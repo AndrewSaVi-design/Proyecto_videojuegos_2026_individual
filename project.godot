@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Aero_rush"
-run/main_scene="uid://bgvfp52gdi8n2"
+run/main_scene="uid://bqsrsg6sn2eyw"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
