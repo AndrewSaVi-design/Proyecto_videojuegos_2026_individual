@@ -1,5 +1,7 @@
 extends Area2D
 
+var ya_choco = false # Evita procesar el choque múltiples veces
+
 func _process(delta):
 	var velocidad_base = 300.0
 	var velocidad_final = velocidad_base
@@ -22,8 +24,23 @@ func _process(delta):
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.name == "DetectorPeligro" or area.is_in_group("Player"):
-		get_tree().change_scene_to_file("res://game_over.tscn")
+		var jugador = area.get_parent()
+		jugador.recibir_dano() # Tu lógica de la moto
+		verificar_impacto(jugador) # La lógica de tu amigo
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Jugador" or body.is_in_group("Player"):
-		get_tree().change_scene_to_file("res://game_over.tscn")
+		body.recibir_dano() # Tu lógica de la moto
+		verificar_impacto(body) # La lógica de tu amigo
+
+# Nueva función de control
+func verificar_impacto(jugador):
+	if ya_choco:
+		return
+		
+	ya_choco = true
+	#set_process(false) # Detiene el avance del obstáculo tras el choque
+	
+	# Llamamos a la nueva lógica de daño por bloque en el jugador
+	if jugador.has_method("recibir_impacto_bloque"):
+		jugador.recibir_impacto_bloque()

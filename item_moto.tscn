@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://ddp51kc2sht6s"]
+
+[ext_resource type="Script" uid="uid://bhghqgkcqhhhn" path="res://item_moto.gd" id="1_0ibp8"]
+[ext_resource type="Texture2D" uid="uid://du0gif1sqdi2w" path="res://moto.png" id="2_0ibp8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bikww"]
+size = Vector2(146, 126)
+
+[node name="itemMoto" type="Area2D" unique_id=1233416707]
+script = ExtResource("1_0ibp8")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1072883815]
+position = Vector2(2, -1)
+scale = Vector2(0.38541666, 0.4248339)
+texture = ExtResource("2_0ibp8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=597469755]
+position = Vector2(2, -1)
+shape = SubResource("RectangleShape2D_bikww")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
