@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cbsuoos0blhev"]
+[gd_scene format=3 uid="uid://cv3dcar5d4y2n"]
 
 [ext_resource type="Script" uid="uid://fe7tone4w02j" path="res://intro.gd" id="1_ayt76"]
 [ext_resource type="VideoStream" uid="uid://btypvekamca37" path="res://aero_rush_IA.ogv" id="2_7a8ye"]
