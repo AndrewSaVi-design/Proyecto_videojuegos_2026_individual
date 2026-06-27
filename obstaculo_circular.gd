@@ -24,18 +24,16 @@ func _process(delta: float) -> void:
 	if position.x < -100:
 		queue_free()
 
+# (Opcional) Si en tu jugador tienes un Area2D llamado "DetectorPeligro" como en los láseres
 func _on_area_entered(area: Area2D) -> void:
 	if area.name == "DetectorPeligro" or area.is_in_group("Player"):
-		var jugador = area.get_parent()
-		jugador.recibir_dano() # <-- TU LÓGICA: Rompe la moto o da tiempo de gracia
-		verificar_impacto(jugador) # <-- LÓGICA DE TU AMIGO: Aplica animación/daño si no hay escudo
+		verificar_impacto(area.get_parent())
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Jugador" or body.is_in_group("Player"):
-		body.recibir_dano() # <-- TU LÓGICA: Rompe la moto o da tiempo de gracia
-		verificar_impacto(body) # <-- LÓGICA DE TU AMIGO: Aplica animación/daño si no hay escudo
+		verificar_impacto(body)
 
-# MANEJA EL IMPACTO DE FORMA SEGURA
+# NUEVA FUNCIÓN: Maneja el impacto de forma segura
 func verificar_impacto(jugador):
 	if ya_choco:
 		return
@@ -43,6 +41,6 @@ func verificar_impacto(jugador):
 	ya_choco = true
 	#set_process(false) # Detiene el avance en X y también detiene la rotación
 	
-	# Llamamos a la función de daño por bloque en el jugador
+	# Llamamos a la función que ya programamos en el jugador
 	if jugador.has_method("recibir_impacto_bloque"):
 		jugador.recibir_impacto_bloque()

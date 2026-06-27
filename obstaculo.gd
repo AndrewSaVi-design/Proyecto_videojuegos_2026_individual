@@ -24,14 +24,11 @@ func _process(delta):
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.name == "DetectorPeligro" or area.is_in_group("Player"):
-		var jugador = area.get_parent()
-		jugador.recibir_dano() # Tu lógica de la moto
-		verificar_impacto(jugador) # La lógica de tu amigo
+		verificar_impacto(area.get_parent())
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Jugador" or body.is_in_group("Player"):
-		body.recibir_dano() # Tu lógica de la moto
-		verificar_impacto(body) # La lógica de tu amigo
+		verificar_impacto(body)
 
 # Nueva función de control
 func verificar_impacto(jugador):
