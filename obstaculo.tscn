@@ -7,6 +7,7 @@
 size = Vector2(107, 115.5)
 
 [node name="obstaculo" type="Area2D" unique_id=1264636146 groups=["peligro"]]
+z_index = 1
 script = ExtResource("1_phkyr")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1352028784]

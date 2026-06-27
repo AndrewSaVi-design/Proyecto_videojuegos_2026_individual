@@ -10,6 +10,8 @@ func _process(delta):
 		queue_free()
 
 func _on_body_entered(body):
-	if body.name == "Jugador": 
+	print("🚨 ALGO CHOCÓ CON LA MOTO. Se llama: ", body.name)
+	if body.name == "Jugador":
+		print("✅ ¡Es el Jugador! Mandando orden de activar moto...")
 		body.activar_moto()
 		queue_free()

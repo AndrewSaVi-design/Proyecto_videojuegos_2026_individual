@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://c44moi0s52fyn" path="res://hurt2.png" id="7_lb1h3"]
 [ext_resource type="Texture2D" uid="uid://dgy87y3wg8weq" path="res://DrakeHurtBlock.png" id="8_lb1h3"]
 [ext_resource type="Texture2D" uid="uid://cgsjpx5xalkae" path="res://DrakeHurtBlock2.png" id="9_uegni"]
+[ext_resource type="PackedScene" uid="uid://ddp51kc2sht6s" path="res://item_moto.tscn" id="13_uegni"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lb1h3"]
 animations = [{
@@ -77,7 +78,6 @@ normal = Vector2(0, 1)
 distance = -606.0
 
 [node name="Node2D" type="Node2D" unique_id=554748721]
-position = Vector2(-3, 0)
 script = ExtResource("1_5yunf")
 
 [node name="Interfaz" type="CanvasLayer" parent="." unique_id=74168503]
@@ -109,6 +109,7 @@ autoscroll = Vector2(-250, 0)
 repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D" unique_id=440925663]
+z_index = 1
 position = Vector2(576, 352.75)
 scale = Vector2(1, 1.0648253)
 texture = ExtResource("1_xywc0")
@@ -154,6 +155,10 @@ shape = SubResource("WorldBoundaryShape2D_5yunf")
 [node name="GeneradorObstaculos" type="Timer" parent="." unique_id=1542807300]
 wait_time = 2.0
 autostart = true
+
+[node name="itemMoto" parent="." unique_id=1233416707 instance=ExtResource("13_uegni")]
+z_index = 1
+position = Vector2(612, 534)
 
 [connection signal="area_entered" from="Jugador/DetectorPeligro" to="Jugador" method="_on_detector_peligro_area_entered"]
 [connection signal="timeout" from="GeneradorObstaculos" to="." method="_on_generador_obstaculos_timeout"]

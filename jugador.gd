@@ -4,6 +4,7 @@ var gravedad = 600
 var potencia_propulsor = 2500 # Fuerza continua para el jetpack
 var es_cian = false 
 var esta_herido = false # <-- NUEVA VARIABLE: Controla si el jugador recibió un golpe
+var en_moto = false
 
 # 1. Cambiamos la referencia al nuevo nodo AnimatedSprite2D
 @onready var animated_sprite = $AnimatedSprite2D
@@ -66,3 +67,8 @@ func cambiar_traje():
 		animated_sprite.modulate = Color(0, 1, 1) # Cian
 	else:
 		animated_sprite.modulate = Color(1, 0.5, 0) # Naranja
+		
+func activar_moto():
+	print("🏍️ ¡El jugador recibió la orden! Cambiando animación...")
+	en_moto = true
+	$AnimatedSprite2D.play("moto")

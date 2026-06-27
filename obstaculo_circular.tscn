@@ -7,6 +7,7 @@
 size = Vector2(74, 179)
 
 [node name="obstaculo_circular" type="Area2D" unique_id=1264636146 groups=["peligro"]]
+z_index = 1
 script = ExtResource("1_8v2y6")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1352028784]

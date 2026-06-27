@@ -7,6 +7,7 @@
 size = Vector2(1234, 18.5)
 
 [node name="LaserHorizontal" type="Area2D" unique_id=500719269 groups=["laser_cian"]]
+z_index = 1
 script = ExtResource("1_8gudd")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=685609558]

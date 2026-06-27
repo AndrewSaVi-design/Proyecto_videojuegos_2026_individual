@@ -7,6 +7,7 @@
 size = Vector2(43, 2550)
 
 [node name="LaserNaranja" type="Area2D" unique_id=1148845059 groups=["laser_naranja"]]
+z_index = 1
 script = ExtResource("1_eaag6")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1464548643]
