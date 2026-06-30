@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://c44moi0s52fyn" path="res://hurt2.png" id="7_lb1h3"]
 [ext_resource type="Texture2D" uid="uid://dgy87y3wg8weq" path="res://DrakeHurtBlock.png" id="8_lb1h3"]
 [ext_resource type="Texture2D" uid="uid://cgsjpx5xalkae" path="res://DrakeHurtBlock2.png" id="9_uegni"]
+[ext_resource type="AudioStream" uid="uid://cos1iqw4pt3jk" path="res://sonidoDeElectrocutar.mp3" id="13_syf7j"]
+[ext_resource type="AudioStream" uid="uid://bml4ub6i04w5q" path="res://Amber_Lock.mp3" id="13_uegni"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lb1h3"]
 animations = [{
@@ -136,6 +138,9 @@ shape = SubResource("RectangleShape2D_gejyx")
 position = Vector2(-68.5, -131.5)
 shape = SubResource("RectangleShape2D_xywc0")
 
+[node name="SonidoElectrocutar" type="AudioStreamPlayer2D" parent="Jugador" unique_id=1875988027]
+stream = ExtResource("13_syf7j")
+
 [node name="Suelo" type="StaticBody2D" parent="." unique_id=643482594]
 position = Vector2(26, 596)
 
@@ -154,6 +159,10 @@ shape = SubResource("WorldBoundaryShape2D_5yunf")
 [node name="GeneradorObstaculos" type="Timer" parent="." unique_id=1542807300]
 wait_time = 2.0
 autostart = true
+
+[node name="MusicaMundo" type="AudioStreamPlayer2D" parent="." unique_id=1684816635]
+stream = ExtResource("13_uegni")
+autoplay = true
 
 [connection signal="area_entered" from="Jugador/DetectorPeligro" to="Jugador" method="_on_detector_peligro_area_entered"]
 [connection signal="timeout" from="GeneradorObstaculos" to="." method="_on_generador_obstaculos_timeout"]
