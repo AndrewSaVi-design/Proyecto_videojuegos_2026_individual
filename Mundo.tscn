@@ -3,8 +3,7 @@
 [ext_resource type="Script" uid="uid://c77dhm384t7ut" path="res://mundo.gd" id="1_5yunf"]
 [ext_resource type="Script" uid="uid://74eto5irmdkh" path="res://jugador.gd" id="1_ubi47"]
 [ext_resource type="Texture2D" uid="uid://b1n18iov7ej46" path="res://fondo_tunel.png" id="1_xywc0"]
-[ext_resource type="Texture2D" uid="uid://djc3wuulymdcy" path="res://bullet1.png" id="2_1pedo"]
-[ext_resource type="Texture2D" uid="uid://dqmishtx3j7lh" path="res://avance.png" id="3_w05dh"]
+[ext_resource type="Texture2D" uid="uid://c2jn4sfpmkyma" path="res://iconInv.png" id="2_bi0k3"]
 [ext_resource type="Texture2D" uid="uid://ctujnkuwnk0f5" path="res://moneda.png" id="4_7dq3s"]
 [ext_resource type="Texture2D" uid="uid://bbgw1wdrqdk4w" path="res://Drake30.png" id="4_jlv7k"]
 [ext_resource type="Texture2D" uid="uid://bft83woah15d5" path="res://Drake31.png" id="5_ftdas"]
@@ -179,21 +178,13 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -35.0
-offset_top = -66.0
-offset_right = 35.0
+offset_left = -47.0
+offset_top = -73.0
+offset_right = 48.0
+offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 0
-texture = ExtResource("2_1pedo")
-expand_mode = 1
-
-[node name="TextureRect2" type="TextureRect" parent="Interfaz/PanelCompra" unique_id=801641560]
-layout_mode = 0
-offset_left = 21.0
-offset_top = -5.0
-offset_right = 47.0
-offset_bottom = 22.0
-texture = ExtResource("3_w05dh")
+texture = ExtResource("2_bi0k3")
 expand_mode = 1
 
 [node name="TextureRect3" type="TextureRect" parent="Interfaz/PanelCompra" unique_id=1014865052]
