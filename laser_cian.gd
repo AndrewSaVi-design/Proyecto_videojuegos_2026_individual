@@ -1,7 +1,7 @@
 extends Area2D
 
 var ya_choco = false # <-- NUEVA VARIABLE: Evita que el choque se procese múltiples veces seguidas
-
+"""
 func _process(delta):
 	var velocidad_base = 300.0 # Velocidad inicial suave
 	var velocidad_final = velocidad_base
@@ -20,6 +20,34 @@ func _process(delta):
 	position.x -= velocidad_final * delta
 	
 	if position.x < -100:
+		queue_free()"""
+		
+func _process(delta):
+	var velocidad_base = 300.0
+	var velocidad_final = velocidad_base
+	
+	# Escalado de dificultad normal
+	var mundo = get_tree().current_scene
+	if mundo and "distancia" in mundo:
+		if mundo.distancia >= 400:
+			velocidad_final += 400.0
+		elif mundo.distancia >= 200:
+			velocidad_final += 250.0
+		elif mundo.distancia >= 50:
+			velocidad_final += 120.0
+
+	# NUEVA LÓGICA: Si el mundo tiene un multiplicador de velocidad, lo aplicamos aquí
+	var turbo = 1.0
+	if mundo and "multiplicador_velocidad" in mundo:
+		turbo = mundo.multiplicador_velocidad
+
+	# MODIFICACIÓN AQUÍ: Añadimos la variable 'turbo' al movimiento
+	position.x -= velocidad_final * turbo * delta
+	
+	# Si es el obstáculo circular, también puedes acelerar su rotación si quieres:
+	# rotation_degrees += velocidad_rotacion * turbo * delta
+	
+	if position.x < -200:
 		queue_free()
 
 func _on_area_entered(area: Area2D) -> void:

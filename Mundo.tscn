@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://c77dhm384t7ut" path="res://mundo.gd" id="1_5yunf"]
 [ext_resource type="Script" uid="uid://74eto5irmdkh" path="res://jugador.gd" id="1_ubi47"]
 [ext_resource type="Texture2D" uid="uid://b1n18iov7ej46" path="res://fondo_tunel.png" id="1_xywc0"]
+[ext_resource type="Texture2D" uid="uid://djc3wuulymdcy" path="res://bullet1.png" id="2_1pedo"]
+[ext_resource type="Texture2D" uid="uid://dqmishtx3j7lh" path="res://avance.png" id="3_w05dh"]
+[ext_resource type="Texture2D" uid="uid://ctujnkuwnk0f5" path="res://moneda.png" id="4_7dq3s"]
 [ext_resource type="Texture2D" uid="uid://bbgw1wdrqdk4w" path="res://Drake30.png" id="4_jlv7k"]
 [ext_resource type="Texture2D" uid="uid://bft83woah15d5" path="res://Drake31.png" id="5_ftdas"]
 [ext_resource type="Texture2D" uid="uid://c3oorfob07ucn" path="res://hurt0.png" id="5_ocdg6"]
@@ -14,6 +17,26 @@
 [ext_resource type="Texture2D" uid="uid://cgsjpx5xalkae" path="res://DrakeHurtBlock2.png" id="9_uegni"]
 [ext_resource type="AudioStream" uid="uid://cos1iqw4pt3jk" path="res://sonidoDeElectrocutar.mp3" id="13_syf7j"]
 [ext_resource type="AudioStream" uid="uid://bml4ub6i04w5q" path="res://Amber_Lock.mp3" id="13_uegni"]
+[ext_resource type="Texture2D" uid="uid://cwqr50bmvuk58" path="res://DrakeInv1.png" id="16_jn82q"]
+[ext_resource type="Texture2D" uid="uid://ceh54t0vnj5wd" path="res://DrakeInv2.png" id="17_ws3pl"]
+[ext_resource type="Texture2D" uid="uid://cysgvb4jrlj8n" path="res://DrakeInv3.png" id="18_ak346"]
+[ext_resource type="Texture2D" uid="uid://8otdoinwjok5" path="res://DrakeInv4.png" id="19_gi3ff"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w05dh"]
+bg_color = Color(0.68021274, 0.68021274, 0.68021274, 0.29411766)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(3.7045925, 3.7045925, 3.7045925, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 35.0
+expand_margin_top = 35.0
+expand_margin_right = 35.0
+expand_margin_bottom = 35.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lb1h3"]
 animations = [{
@@ -66,6 +89,23 @@ animations = [{
 "loop": true,
 "name": &"run",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_jn82q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_ws3pl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_ak346")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_gi3ff")
+}],
+"loop": true,
+"name": &"runInvencible",
+"speed": 5.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gejyx"]
@@ -104,6 +144,67 @@ offset_bottom = 23.0
 theme_override_font_sizes/font_size = 25
 text = "Monedas: 0"
 
+[node name="PanelCompra" type="Panel" parent="Interfaz" unique_id=46101427]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_w05dh")
+
+[node name="Label" type="Label" parent="Interfaz/PanelCompra" unique_id=147256863]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+offset_right = 40.0
+offset_bottom = 29.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 22
+text = "5"
+
+[node name="TextureRect" type="TextureRect" parent="Interfaz/PanelCompra" unique_id=918663919]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -35.0
+offset_top = -66.0
+offset_right = 35.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("2_1pedo")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Interfaz/PanelCompra" unique_id=801641560]
+layout_mode = 0
+offset_left = 21.0
+offset_top = -5.0
+offset_right = 47.0
+offset_bottom = 22.0
+texture = ExtResource("3_w05dh")
+expand_mode = 1
+
+[node name="TextureRect3" type="TextureRect" parent="Interfaz/PanelCompra" unique_id=1014865052]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 42.0
+offset_right = 41.0
+offset_bottom = 68.0
+texture = ExtResource("4_7dq3s")
+expand_mode = 1
+
 [node name="Parallax2D" type="Parallax2D" parent="." unique_id=930798378]
 repeat_size = Vector2(1152, 0)
 autoscroll = Vector2(-250, 0)
@@ -125,8 +226,7 @@ script = ExtResource("1_ubi47")
 position = Vector2(-69.89082, -138.20616)
 scale = Vector2(0.23866801, 0.24364121)
 sprite_frames = SubResource("SpriteFrames_lb1h3")
-animation = &"hurtBlock"
-frame_progress = 0.7803505
+animation = &"runInvencible"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador" unique_id=151178905]
 position = Vector2(-70, -137.5625)

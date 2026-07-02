@@ -5,9 +5,24 @@ var distancia: float = 0.0
 @onready var texto_distancia = $Interfaz/TextoDistancia
 
 # VARIABLES DEL CONTADOR DE MONEDAS
-var monedas: int = 0
+#var monedas: int = 0
+#@onready var texto_monedas = $Interfaz/TextoMonedas
+# VARIABLES DEL CONTADOR DE MONEDAS
+# (Eliminamos la variable local 'monedas')
 @onready var texto_monedas = $Interfaz/TextoMonedas
 
+# NUEVAS VARIABLES PARA LA TIENDA
+@onready var panel_compra = $Interfaz/PanelCompra
+var tienda_abierta: bool = false # Controla si el cuadro está en pantalla
+
+# (Debajo de tus variables de tienda_abierta)
+var poder_activo: bool = false
+var meta_distancia_poder: float = 0.0
+@onready var jugador = $Jugador # Asegúrate de que el nodo se llame "Jugador" en tu escena
+
+# NUEVA VARIABLE: Controla el turbo del mundo entero
+var multiplicador_velocidad: float = 1.0
+@onready var parallax_fondo = $Parallax2D # Cambia el nombre si tu nodo se llama distinto
 # Cargamos las escenas
 var laserCian = preload("res://laserCian.tscn")
 var laserNaranja = preload("res://laserNaranja.tscn")
@@ -18,13 +33,83 @@ var escena_moneda = preload("res://moneda.tscn")
 # NUEVO: Cargamos tu barra de contención que rota
 var objetoCircular = preload("res://obstaculo_circular.tscn")
 
+func _ready() -> void:
+	# Al iniciar la escena, mostramos las monedas que estaban guardadas globalmente
+	texto_monedas.text = "Monedas: " + str(Global.monedas)
+	panel_compra.hide() # Lo ocultamos por defecto
+	
+	# NUEVO: Revisamos el dinero solo al arrancar la partida
+	if Global.monedas >= 5:
+		mostrar_ventana_compra()
+
 func _process(delta: float) -> void:
-	distancia += delta * 10.0
+	distancia += delta * 10.0 * multiplicador_velocidad
 	texto_distancia.text = str(int(distancia)) + " km"
+	
+	# Revisamos constantemente si el jugador ya recorrió los 400 km de ventaja
+	if poder_activo and distancia >= meta_distancia_poder:
+		desactivar_poder()
+		
+	# 2. NUEVA LÍNEA: Aceleramos el fondo
+	if parallax_fondo:
+		# Cambia '150.0' por la velocidad normal a la que se movía tu fondo
+		parallax_fondo.scroll_offset.x -= 150.0 * delta * multiplicador_velocidad
 
 func sumar_moneda() -> void:
-	monedas += 1
-	texto_monedas.text = "Monedas: " + str(monedas)
+	# Usamos la variable del Autoload
+	Global.monedas += 1
+	Global.guardar_datos() # Guarda permanentemente cada vez que agarras una moneda
+	
+	texto_monedas.text = "Monedas: " + str(Global.monedas)
+	
+
+# --- NUEVA LÓGICA DE LA VENTANA DE COMPRA ---
+
+func mostrar_ventana_compra():
+	tienda_abierta = true
+	panel_compra.show()
+	
+# La función _input detecta cuando presionas cualquier tecla
+func _input(event: InputEvent) -> void:
+	# Solo escuchamos el teclado si la ventana de compra está en pantalla
+	if tienda_abierta:
+		
+		# Si presiona ENTER (ui_accept es la acción por defecto para Enter/Espacio en Godot)
+		if event.is_action_pressed("comprar"):
+			realizar_compra()
+			
+		# Si presiona ESCAPE (ui_cancel es la acción por defecto para Esc)
+		elif event.is_action_pressed("escapar"):
+			cerrar_ventana_compra()
+			
+func realizar_compra():
+	# 1. Descontamos las monedas y guardamos
+	Global.monedas -= 5
+	Global.guardar_datos()
+	texto_monedas.text = "Monedas: " + str(Global.monedas)
+	
+	# 2. Desaparecemos el cuadro
+	cerrar_ventana_compra()
+	
+	poder_activo = true
+	meta_distancia_poder = distancia + 400.0 
+	
+	# MODIFICACIÓN AQUÍ: Activamos el turbo de velocidad (3 veces más rápido)
+	multiplicador_velocidad = 10.0
+	
+	if jugador and jugador.has_method("set_invencible"):
+		jugador.set_invencible(true)
+		
+# NUEVA FUNCIÓN: Apaga el poder
+func desactivar_poder():
+	poder_activo = false
+	multiplicador_velocidad = 1.0
+	if jugador and jugador.has_method("set_invencible"):
+		jugador.set_invencible(false)
+
+func cerrar_ventana_compra():
+	tienda_abierta = false
+	panel_compra.hide()
 
 func _on_generador_obstaculos_timeout() -> void:
 	var suerte = randi() % 14 # Ampliado a 14 para meter el nuevo peligro

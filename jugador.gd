@@ -10,6 +10,8 @@ var en_moto = false
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var SonidoElectrocutar = $SonidoElectrocutar
 
+var invencible = false # <-- NUEVA VARIABLE
+
 # Funciones para la física
 func _physics_process(delta):
 	# Si el personaje está herido, salimos de la función inmediatamente
@@ -32,10 +34,18 @@ func _physics_process(delta):
 	move_and_slide()
 	
 	# 2. Lógica de Animaciones
+	# --- 2. LÓGICA DE ANIMACIONES ACTUALIZADA ---
 	if abs(velocity.y) == 400: 
-		animated_sprite.play("run")
+		# Revisamos si el poder está activo mientras corre
+		if invencible:
+			animated_sprite.play("runInvencible")
+		else:
+			animated_sprite.play("run")
 	else:
+		# Si está en el aire flotando
 		animated_sprite.play("fly")
+		# Nota: Si también creaste una animación para volar invencible, 
+		# podrías poner un if/else aquí igual que arriba llamando a "flyInvencible".
 	
 	# Cambio de color
 	if Input.is_action_just_pressed("cambiar_color"):
@@ -43,6 +53,7 @@ func _physics_process(delta):
 		
 # NUEVA FUNCIÓN: Activada específicamente por el obstáculo sólido
 func recibir_impacto_bloque():
+	if invencible: return # Ignoramos el choque
 	esta_herido = true
 	animated_sprite.play("hurtBlock") # Cambia a la animación de golpe por bloque
 	
@@ -54,6 +65,7 @@ func recibir_impacto_bloque():
 
 # <-- NUEVA FUNCIÓN: El láser llamará a esto cuando el jugador pierda
 func recibir_danio():
+	if invencible: return # Si el escudo está activo, ignoramos el daño
 	esta_herido = true
 	velocity = Vector2.ZERO # Detiene en seco cualquier impulso que traiga
 	animated_sprite.play("hurt")
@@ -71,6 +83,22 @@ func cambiar_traje():
 	else:
 		animated_sprite.modulate = Color(1, 0.5, 0) # Naranja
 		
+		
+# <-- NUEVA FUNCIÓN: Controla el efecto visual del poder
+func set_invencible(estado: bool):
+	invencible = estado
+	if invencible:
+		# Hacemos que el sprite brille o se vea ligeramente transparente 
+		# para que el jugador sepa que el poder está activo
+		#animated_sprite.modulate.a = 0.5 
+		pass
+	else:
+		# Cuando se apaga el poder, le devolvemos su visibilidad normal
+		animated_sprite.modulate.a = 1.0
+		# Llamamos a cambiar_traje para asegurarnos de que recupere su color (Cian o Naranja)
+		es_cian = !es_cian 
+		cambiar_traje()
+
 func activar_moto():
 	print("🏍️ ¡El jugador recibió la orden! Cambiando animación...")
 	en_moto = true
