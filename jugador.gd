@@ -8,6 +8,7 @@ var en_moto = false
 
 # 1. Cambiamos la referencia al nuevo nodo AnimatedSprite2D
 @onready var animated_sprite = $AnimatedSprite2D
+@onready var SonidoElectrocutar = $SonidoElectrocutar
 
 # Funciones para la física
 func _physics_process(delta):
@@ -56,6 +57,8 @@ func recibir_danio():
 	esta_herido = true
 	velocity = Vector2.ZERO # Detiene en seco cualquier impulso que traiga
 	animated_sprite.play("hurt")
+	
+	SonidoElectrocutar.play()
 	# El jugador ahora maneja su propio tiempo y cambio de escena
 	await get_tree().create_timer(1.5).timeout
 	get_tree().change_scene_to_file("res://game_over.tscn")
