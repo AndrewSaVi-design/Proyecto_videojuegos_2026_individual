@@ -5,17 +5,12 @@ var distancia: float = 0.0
 @onready var texto_distancia = $Interfaz/TextoDistancia
 
 # VARIABLES DEL CONTADOR DE MONEDAS
-#var monedas: int = 0
-#@onready var texto_monedas = $Interfaz/TextoMonedas
-# VARIABLES DEL CONTADOR DE MONEDAS
-# (Eliminamos la variable local 'monedas')
 @onready var texto_monedas = $Interfaz/TextoMonedas
 
 # NUEVAS VARIABLES PARA LA TIENDA
 @onready var panel_compra = $Interfaz/PanelCompra
 var tienda_abierta: bool = false # Controla si el cuadro está en pantalla
 
-# (Debajo de tus variables de tienda_abierta)
 var poder_activo: bool = false
 var meta_distancia_poder: float = 0.0
 @onready var jugador = $Jugador # Asegúrate de que el nodo se llame "Jugador" en tu escena
@@ -23,15 +18,15 @@ var meta_distancia_poder: float = 0.0
 # NUEVA VARIABLE: Controla el turbo del mundo entero
 var multiplicador_velocidad: float = 1.0
 @onready var parallax_fondo = $Parallax2D # Cambia el nombre si tu nodo se llama distinto
+
 # Cargamos las escenas
 var laserCian = preload("res://laserCian.tscn")
 var laserNaranja = preload("res://laserNaranja.tscn")
 var escena_obstaculo = preload("res://obstaculo.tscn")
 var laserHorizontal = preload("res://laser_horizontal.tscn")
 var escena_moneda = preload("res://moneda.tscn") 
-
-# NUEVO: Cargamos tu barra de contención que rota
 var objetoCircular = preload("res://obstaculo_circular.tscn")
+var escena_moto = preload("res://item_moto.tscn") # <-- NUEVO: Cargamos la moto
 
 func _ready() -> void:
 	# Al iniciar la escena, mostramos las monedas que estaban guardadas globalmente
@@ -50,7 +45,7 @@ func _process(delta: float) -> void:
 	if poder_activo and distancia >= meta_distancia_poder:
 		desactivar_poder()
 		
-	# 2. NUEVA LÍNEA: Aceleramos el fondo
+	# NUEVA LÍNEA: Aceleramos el fondo
 	if parallax_fondo:
 		# Cambia '150.0' por la velocidad normal a la que se movía tu fondo
 		parallax_fondo.scroll_offset.x -= 150.0 * delta * multiplicador_velocidad
@@ -61,7 +56,6 @@ func sumar_moneda() -> void:
 	Global.guardar_datos() # Guarda permanentemente cada vez que agarras una moneda
 	
 	texto_monedas.text = "Monedas: " + str(Global.monedas)
-	
 
 # --- NUEVA LÓGICA DE LA VENTANA DE COMPRA ---
 
@@ -73,11 +67,9 @@ func mostrar_ventana_compra():
 func _input(event: InputEvent) -> void:
 	# Solo escuchamos el teclado si la ventana de compra está en pantalla
 	if tienda_abierta:
-		
 		# Si presiona ENTER (ui_accept es la acción por defecto para Enter/Espacio en Godot)
 		if event.is_action_pressed("comprar"):
 			realizar_compra()
-			
 		# Si presiona ESCAPE (ui_cancel es la acción por defecto para Esc)
 		elif event.is_action_pressed("escapar"):
 			cerrar_ventana_compra()
@@ -112,7 +104,7 @@ func cerrar_ventana_compra():
 	panel_compra.hide()
 
 func _on_generador_obstaculos_timeout() -> void:
-	var suerte = randi() % 14 # Ampliado a 14 para meter el nuevo peligro
+	var suerte = randi() % 15 # <-- CAMBIO: Ampliado a 15 para la moto
 	
 	# --- CAMBIO AQUÍ: FRECUENCIA AJUSTADA HASTA LOS 400 KM ---
 	var tiempo_espera_base = 1.2 # Ritmo inicial (0 a 50 km)
@@ -125,7 +117,15 @@ func _on_generador_obstaculos_timeout() -> void:
 	
 	# --- RULETA ALEATORIA ACTUALIZADA ---
 	
-	if suerte < 4: # 1. OBSTÁCULO NORMAL (MÁS FRECUENTE)
+	# NUEVO: Lógica de aparición de la moto (Solo si no tiene moto ya)
+	if suerte == 14 and not jugador.en_moto:
+		var instancia_moto = escena_moto.instantiate()
+		# Ajusta el '450' si necesitas que la moto aparezca más arriba o más abajo
+		instancia_moto.position = Vector2(1200, 450) 
+		add_child(instancia_moto)
+		$GeneradorObstaculos.wait_time = tiempo_espera_base
+		
+	elif suerte < 4: # 1. OBSTÁCULO NORMAL (MÁS FRECUENTE)
 		var nuevo_ob = escena_obstaculo.instantiate()
 		nuevo_ob.position = Vector2(1200, randf_range(150, 450))
 		add_child(nuevo_ob)

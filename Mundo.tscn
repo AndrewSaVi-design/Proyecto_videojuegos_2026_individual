@@ -20,6 +20,8 @@
 [ext_resource type="Texture2D" uid="uid://ceh54t0vnj5wd" path="res://DrakeInv2.png" id="17_ws3pl"]
 [ext_resource type="Texture2D" uid="uid://cysgvb4jrlj8n" path="res://DrakeInv3.png" id="18_ak346"]
 [ext_resource type="Texture2D" uid="uid://8otdoinwjok5" path="res://DrakeInv4.png" id="19_gi3ff"]
+[ext_resource type="Texture2D" uid="uid://cdrghmj74e4kw" path="res://moto2.png" id="20_jn82q"]
+[ext_resource type="PackedScene" uid="uid://ddp51kc2sht6s" path="res://item_moto.tscn" id="22_ws3pl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w05dh"]
 bg_color = Color(0.68021274, 0.68021274, 0.68021274, 0.29411766)
@@ -111,7 +113,10 @@ animations = [{
 size = Vector2(64, 73.125)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xywc0"]
-size = Vector2(63, 83)
+size = Vector2(59.5, 75.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ws3pl"]
+size = Vector2(418.33832, 342.61664)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5yunf"]
 normal = Vector2(0, 1)
@@ -226,11 +231,23 @@ shape = SubResource("RectangleShape2D_gejyx")
 [node name="DetectorPeligro" type="Area2D" parent="Jugador" unique_id=747994856]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador/DetectorPeligro" unique_id=471065349]
-position = Vector2(-68.5, -131.5)
+position = Vector2(-70.75, -132.75)
 shape = SubResource("RectangleShape2D_xywc0")
 
 [node name="SonidoElectrocutar" type="AudioStreamPlayer2D" parent="Jugador" unique_id=1875988027]
 stream = ExtResource("13_syf7j")
+
+[node name="SpriteMoto" type="Sprite2D" parent="Jugador" unique_id=1082292758]
+visible = false
+position = Vector2(-71.5, -132.05916)
+scale = Vector2(0.15776698, 0.2422534)
+texture = ExtResource("20_jn82q")
+
+[node name="Area2D" type="Area2D" parent="Jugador/SpriteMoto" unique_id=2072434464]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador/SpriteMoto/Area2D" unique_id=1352857956]
+position = Vector2(9.507935, 6.436157)
+shape = SubResource("RectangleShape2D_ws3pl")
 
 [node name="Suelo" type="StaticBody2D" parent="." unique_id=643482594]
 position = Vector2(26, 596)
@@ -254,6 +271,9 @@ autostart = true
 [node name="MusicaMundo" type="AudioStreamPlayer2D" parent="." unique_id=1684816635]
 stream = ExtResource("13_uegni")
 autoplay = true
+
+[node name="itemMoto" parent="." unique_id=1233416707 instance=ExtResource("22_ws3pl")]
+position = Vector2(1075, 489)
 
 [connection signal="area_entered" from="Jugador/DetectorPeligro" to="Jugador" method="_on_detector_peligro_area_entered"]
 [connection signal="timeout" from="GeneradorObstaculos" to="." method="_on_generador_obstaculos_timeout"]
