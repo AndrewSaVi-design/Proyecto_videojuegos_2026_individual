@@ -52,9 +52,9 @@ func _physics_process(delta):
 		cambiar_traje()
 		
 # NUEVA FUNCIÓN: Activada específicamente por el obstáculo sólido
-func recibir_impacto_bloque():
+func    cto_bloque():
 	if invencible: return # Ignoramos el choque
-	esta_herido = true
+	esta_herido = true  
 	animated_sprite.play("hurtBlock") # Cambia a la animación de golpe por bloque
 	
 	# El juego continúa ejecutando las físicas de caída durante 1 segundo
