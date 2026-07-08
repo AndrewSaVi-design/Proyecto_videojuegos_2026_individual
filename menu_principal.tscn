@@ -46,12 +46,7 @@ text = "Iniciar partida"
 [node name="Button2" type="Button" parent="VBoxContainer" unique_id=1828145912]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Opciones "
-
-[node name="Button3" type="Button" parent="VBoxContainer" unique_id=1838358838]
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "Creditos"
+text = "Instrucciones"
 
 [node name="Button4" type="Button" parent="VBoxContainer" unique_id=1522067549]
 layout_mode = 2
@@ -63,5 +58,4 @@ stream = ExtResource("3_ul6ys")
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_button_2_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
 [connection signal="pressed" from="VBoxContainer/Button4" to="." method="_on_button_4_pressed"]

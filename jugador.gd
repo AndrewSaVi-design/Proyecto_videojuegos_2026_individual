@@ -40,6 +40,18 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_pressed("cambiar_color"):
 		cambiar_traje()
+		
+# NUEVA FUNCIÓN: Activada específicamente por el obstáculo sólido
+func    cto_bloque():
+	if invencible: return # Ignoramos el choque
+	esta_herido = true  
+	animated_sprite.play("hurtBlock") # Cambia a la animación de golpe por bloque
+	
+	# El juego continúa ejecutando las físicas de caída durante 1 segundo
+	await get_tree().create_timer(1.5).timeout
+	
+	# Tras el segundo de caída y visualización del daño, cambia la escena
+	get_tree().change_scene_to_file("res://game_over.tscn")
 
 # --- FUNCIONES DE MOTO (CON COLOR SINCRONIZADO) ---
 
