@@ -20,7 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://ceh54t0vnj5wd" path="res://DrakeInv2.png" id="17_ws3pl"]
 [ext_resource type="Texture2D" uid="uid://cysgvb4jrlj8n" path="res://DrakeInv3.png" id="18_ak346"]
 [ext_resource type="Texture2D" uid="uid://8otdoinwjok5" path="res://DrakeInv4.png" id="19_gi3ff"]
-[ext_resource type="Texture2D" uid="uid://cdrghmj74e4kw" path="res://moto2.png" id="20_jn82q"]
+[ext_resource type="Texture2D" uid="uid://dgdut6bb2asfu" path="res://moto6.png" id="20_ws3pl"]
 [ext_resource type="PackedScene" uid="uid://ddp51kc2sht6s" path="res://item_moto.tscn" id="22_ws3pl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w05dh"]
@@ -116,7 +116,7 @@ size = Vector2(64, 73.125)
 size = Vector2(59.5, 75.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ws3pl"]
-size = Vector2(418.33832, 342.61664)
+size = Vector2(564.12317, 408.66217)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5yunf"]
 normal = Vector2(0, 1)
@@ -239,14 +239,14 @@ stream = ExtResource("13_syf7j")
 
 [node name="SpriteMoto" type="Sprite2D" parent="Jugador" unique_id=1082292758]
 visible = false
-position = Vector2(-71.5, -132.05916)
+position = Vector2(-71.5, -159.059)
 scale = Vector2(0.15776698, 0.2422534)
-texture = ExtResource("20_jn82q")
+texture = ExtResource("20_ws3pl")
 
 [node name="Area2D" type="Area2D" parent="Jugador/SpriteMoto" unique_id=2072434464]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jugador/SpriteMoto/Area2D" unique_id=1352857956]
-position = Vector2(9.507935, 6.436157)
+position = Vector2(57.046265, 39.45935)
 shape = SubResource("RectangleShape2D_ws3pl")
 
 [node name="Suelo" type="StaticBody2D" parent="." unique_id=643482594]

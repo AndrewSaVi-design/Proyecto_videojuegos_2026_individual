@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bqsrsg6sn2eyw"]
 
-[ext_resource type="Texture2D" uid="uid://d4fbo60tsrmnd" path="res://escena menu principal.png" id="1_bj1uy"]
+[ext_resource type="Texture2D" uid="uid://cl731obnm008d" path="res://escena menu principal.png" id="1_bj1uy"]
 [ext_resource type="Script" uid="uid://c85w51pogfphr" path="res://menu_principal.gd" id="1_gmcsc"]
-[ext_resource type="AudioStream" uid="uid://b47fxdc3ebaoq" path="res://Massive_Iron_Teeth.mp3" id="3_ul6ys"]
+[ext_resource type="AudioStream" uid="uid://3nuevqi2ukse" path="res://Massive_Iron_Teeth.mp3" id="3_ul6ys"]
 
 [node name="Menu principal" type="Control" unique_id=597173060]
 layout_mode = 3
