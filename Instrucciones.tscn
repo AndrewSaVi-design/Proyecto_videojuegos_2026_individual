@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://dnq0x7ukjavxr"]
+
+[ext_resource type="Texture2D" uid="uid://dqff2e2b2khch" path="res://ventanInstucciones.png" id="1_mfbnp"]
+[ext_resource type="Script" uid="uid://c85mf31fridvj" path="res://instrucciones.gd" id="1_tg8gq"]
+
+[node name="Control" type="Control" unique_id=1250361643]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tg8gq")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=556299695]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_mfbnp")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=79846353]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -48.0
+offset_right = -45.0
+offset_bottom = -17.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(1.065, 1.065)
+alignment = 1
+
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=972733311]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Volver"
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
