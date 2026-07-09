@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bhofwmlko4dgj"]
 
 [ext_resource type="Script" uid="uid://ceu15g67jvkmv" path="res://moneda.gd" id="1_nghqc"]
-[ext_resource type="Texture2D" uid="uid://ctujnkuwnk0f5" path="res://moneda.png" id="2_r4iok"]
+[ext_resource type="Texture2D" uid="uid://cjm0rxoecu7w0" path="res://newmoneda.png" id="2_r4iok"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_nghqc"]
 radius = 30.016663
@@ -12,8 +12,8 @@ collision_layer = 4
 script = ExtResource("1_nghqc")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1135620015]
-position = Vector2(-1.593752, 0.5937524)
-scale = Vector2(0.3074749, 0.3161585)
+position = Vector2(0.52190006, -0.49999762)
+scale = Vector2(0.11030673, 0.11129567)
 texture = ExtResource("2_r4iok")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1260399378]

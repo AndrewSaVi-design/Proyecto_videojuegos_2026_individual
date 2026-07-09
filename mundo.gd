@@ -30,7 +30,7 @@ var escena_moto = preload("res://item_moto.tscn") # <-- NUEVO: Cargamos la moto
 
 func _ready() -> void:
 	# Al iniciar la escena, mostramos las monedas que estaban guardadas globalmente
-	texto_monedas.text = "Monedas: " + str(Global.monedas)
+	texto_monedas.text = "" + str(Global.monedas)
 	panel_compra.hide() # Lo ocultamos por defecto
 	
 	# NUEVO: Revisamos el dinero solo al arrancar la partida
@@ -55,7 +55,7 @@ func sumar_moneda() -> void:
 	Global.monedas += 1
 	Global.guardar_datos() # Guarda permanentemente cada vez que agarras una moneda
 	
-	texto_monedas.text = "Monedas: " + str(Global.monedas)
+	texto_monedas.text = "" + str(Global.monedas)
 
 # --- NUEVA LÓGICA DE LA VENTANA DE COMPRA ---
 
