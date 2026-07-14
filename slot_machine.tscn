@@ -1,0 +1,140 @@
+[gd_scene format=3 uid="uid://bny65umjjurkk"]
+
+[ext_resource type="Script" uid="uid://c26d6o7kycwyi" path="res://slot_machine.gd" id="1_nmlme"]
+[ext_resource type="Texture2D" uid="uid://4n66hbfildgv" path="res://ruleta.png" id="2_i6cki"]
+[ext_resource type="Texture2D" uid="uid://b6ng4k1g634v2" path="res://boton.png" id="2_knkoj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_i6cki"]
+font_size = 30
+font_color = Color(0.15686275, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_knkoj"]
+font_size = 30
+font_color = Color(0.15686275, 1, 1, 1)
+
+[node name="SlotMachine" type="Control" unique_id=868303149]
+process_mode = 3
+layout_mode = 3
+anchor_right = 0.592
+anchor_bottom = 0.53900003
+offset_right = 0.015991211
+offset_bottom = -0.2720337
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nmlme")
+
+[node name="LabelMonedas" type="Label" parent="." unique_id=290445198]
+layout_mode = 0
+offset_left = 316.0
+offset_top = 119.0
+offset_right = 891.0
+offset_bottom = 178.0
+text = "Monedas: 0"
+label_settings = SubResource("LabelSettings_i6cki")
+
+[node name="LabelCosto" type="Label" parent="." unique_id=730279174]
+layout_mode = 0
+offset_left = 317.0
+offset_top = 160.0
+offset_right = 866.0
+offset_bottom = 205.0
+text = "Costo: 3 monedas"
+label_settings = SubResource("LabelSettings_knkoj")
+
+[node name="Panel" type="Panel" parent="." unique_id=161193628]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 468.0
+offset_bottom = 297.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Girar" type="Button" parent="Panel" unique_id=442619312]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 161.0
+offset_top = 42.0
+offset_right = 305.0
+offset_bottom = 172.0
+grow_horizontal = 2
+grow_vertical = 2
+icon = ExtResource("2_knkoj")
+expand_icon = true
+
+[node name="Cancelar" type="Button" parent="Panel" unique_id=2096025732]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 168.0
+offset_top = 175.0
+offset_right = 300.0
+offset_bottom = 245.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "SALIR"
+expand_icon = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1936713622]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -368.0
+offset_top = -120.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Carrete1" type="Control" parent="HBoxContainer" unique_id=590819561]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/Carrete1" unique_id=1071797268]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 117.0
+offset_bottom = 115.0
+texture = ExtResource("2_i6cki")
+expand_mode = 1
+
+[node name="Carrete2" type="Control" parent="HBoxContainer" unique_id=607542453]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/Carrete2" unique_id=1929862658]
+layout_mode = 0
+offset_left = -3.0
+offset_top = 3.0
+offset_right = 115.0
+offset_bottom = 114.0
+texture = ExtResource("2_i6cki")
+expand_mode = 1
+
+[node name="Carrete3" type="Control" parent="HBoxContainer" unique_id=2023592597]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/Carrete3" unique_id=1505804747]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 5.0
+offset_right = 121.0
+offset_bottom = 115.0
+texture = ExtResource("2_i6cki")
+expand_mode = 1
+
+[connection signal="pressed" from="Panel/Girar" to="." method="_on_girar_pressed"]
+[connection signal="pressed" from="Panel/Cancelar" to="." method="_on_girar_pressed"]
+[connection signal="pressed" from="Panel/Cancelar" to="." method="_on_cancelar_pressed"]

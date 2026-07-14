@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal jugador_murio # <--- CORRECCIÓN: Se crea la señal
+
 var gravedad = 600
 var potencia_propulsor = 2500 
 var es_cian = false 
@@ -41,17 +43,17 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("cambiar_color"):
 		cambiar_traje()
 		
-# NUEVA FUNCIÓN: Activada específicamente por el obstáculo sólido
-func    cto_bloque():
+# Función activada específicamente por el obstáculo sólido
+func cto_bloque():
 	if invencible: return # Ignoramos el choque
 	esta_herido = true  
 	animated_sprite.play("hurtBlock") # Cambia a la animación de golpe por bloque
 	
-	# El juego continúa ejecutando las físicas de caída durante 1 segundo
+	# El juego continúa ejecutando las físicas de caída durante 1.5 segundos
 	await get_tree().create_timer(1.5).timeout
 	
-	# Tras el segundo de caída y visualización del daño, cambia la escena
-	get_tree().change_scene_to_file("res://game_over.tscn")
+	# <--- CORRECCIÓN: Emitimos la señal en vez de cambiar de escena
+	jugador_murio.emit() 
 
 # --- FUNCIONES DE MOTO (CON COLOR SINCRONIZADO) ---
 
@@ -80,7 +82,7 @@ func recibir_impacto_bloque():
 		esta_herido = true
 		animated_sprite.play("hurtBlock")
 		await get_tree().create_timer(1.5).timeout
-		get_tree().change_scene_to_file("res://game_over.tscn")
+		jugador_murio.emit() # <--- CORRECCIÓN
 
 func recibir_danio():
 	if invencible: return 
@@ -93,7 +95,7 @@ func recibir_danio():
 		animated_sprite.play("hurt")
 		SonidoElectrocutar.play()
 		await get_tree().create_timer(1.5).timeout
-		get_tree().change_scene_to_file("res://game_over.tscn")
+		jugador_murio.emit() # <--- CORRECCIÓN
 
 # --- LÓGICA DE COLOR ---
 
@@ -115,3 +117,13 @@ func set_invencible(estado: bool):
 		# Al terminar la invencibilidad, aseguramos el color correcto
 		es_cian = !es_cian 
 		cambiar_traje()
+
+# <--- CORRECCIÓN: Función para revivir cuando ganas la lotería
+func revivir():
+	esta_herido = false
+	invencible = true # Lo hacemos invencible un rato para que no vuelva a chocar al instante
+	animated_sprite.play("fly")
+	
+	# Le quitamos la invencibilidad después de 2 segundos
+	await get_tree().create_timer(2.0).timeout
+	set_invencible(false)
