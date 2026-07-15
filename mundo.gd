@@ -18,6 +18,12 @@ var meta_distancia_poder: float = 0.0
 var multiplicador_velocidad: float = 1.0
 @onready var parallax_fondo = $Parallax2D 
 
+# VARIABLES DE LA ALCANCÍA INTEGRADA
+@onready var alcancia_area = $AlcanciaArea
+@onready var colision_alcancia = $AlcanciaArea/CollisionShape2D
+var alcancia_generada: bool = false
+var alcancia_activa: bool = false
+
 # Cargamos las escenas
 var laserCian = preload("res://laserCian.tscn")
 var laserNaranja = preload("res://laserNaranja.tscn")
@@ -30,6 +36,11 @@ var escena_moto = preload("res://item_moto.tscn")
 func _ready() -> void:
 	texto_monedas.text = "" + str(Global.monedas)
 	panel_compra.hide()
+	
+	# ESCONDEMOS LA ALCANCÍA AL INICIAR
+	if alcancia_area:
+		alcancia_area.hide()
+		colision_alcancia.set_deferred("disabled", true)
 	
 	if Global.monedas >= 5:
 		mostrar_ventana_compra()
@@ -66,12 +77,59 @@ func _gestionar_resultado_loto(decision: String):
 func _process(delta: float) -> void:
 	distancia += delta * 10.0 * multiplicador_velocidad
 	texto_distancia.text = str(int(distancia)) + " km"
-	
+	print('alcancia_area.position: ', alcancia_area.position)
 	if poder_activo and distancia >= meta_distancia_poder:
 		desactivar_poder()
 		
 	if parallax_fondo:
 		parallax_fondo.scroll_offset.x -= 150.0 * delta * multiplicador_velocidad
+		
+	# --- LÓGICA DE ACTIVACIÓN ---
+	if distancia >= 100.0 and not alcancia_generada:
+		activar_alcancia()
+		
+	# --- MOVIMIENTO DE LA ALCANCÍA ---
+	#if alcancia_activa:
+	#	var velocidad_base = 700.0 # Misma velocidad rápida que tus obstáculos
+	#	alcancia_area.position.x -= velocidad_base * multiplicador_velocidad * delta
+	# --- MOVIMIENTO DE LA ALCANCÍA ---
+	if alcancia_activa:
+		# Le damos una velocidad estable (ajústala si la quieres más rápida o lenta)
+		var velocidad_base = 500.0 
+		alcancia_area.position.x -= velocidad_base * multiplicador_velocidad * delta
+		
+		# Si la alcancía pasa de largo (sale por la izquierda), la apagamos
+		if alcancia_area.position.x < -200:
+			alcancia_activa = false
+			alcancia_area.hide()
+			colision_alcancia.set_deferred("disabled", true)
+"""
+func activar_alcancia():
+	print("Alcansia activada")
+	alcancia_generada = true
+	alcancia_activa = true
+	
+	# La posicionamos a 1100 píxeles a la derecha del jugador
+	if jugador:
+		print('Se ejecuto jugador')
+		alcancia_area.position = Vector2(jugador.global_position.x + 1100, jugador.global_position.y)
+	else:
+		print("Se ejecutó el else")
+		alcancia_area.position = Vector2(1300, 300)
+		
+	# La hacemos visible y activamos su colisión
+	alcancia_area.show()
+	colision_alcancia.set_deferred("disabled", false)"""
+func activar_alcancia():
+	alcancia_generada = true
+	alcancia_activa = true
+	
+	# La forzamos a nacer a la derecha de la pantalla y al centro de altura
+	alcancia_area.position = Vector2(1300, 300)
+		
+	# La hacemos visible y activamos su colisión
+	alcancia_area.show()
+	colision_alcancia.set_deferred("disabled", false)	
 
 func sumar_moneda() -> void:
 	Global.monedas += 1
@@ -178,3 +236,42 @@ func crear_peligro(escena, es_horizontal, altura_specifica = 0):
 	else:
 		instancia.position = Vector2(1200, randf_range(100, 500))
 	add_child(instancia)
+
+
+func _on_alcancia_area_body_entered(body: Node2D) -> void:
+	# Si lo que chocó fue el jugador (o la moto)
+	if body.name == "Jugador" or body.is_in_group("Player"):
+		alcancia_activa = false
+		alcancia_area.hide() # Desaparecemos la alcancía
+		colision_alcancia.set_deferred("disabled", true) # Apagamos su colisión
+		
+		generar_fila_monedas()
+		
+"""
+func generar_fila_monedas():
+	for i in range(10):
+		var nueva_moneda = escena_moneda.instantiate()
+		
+		# Las colocamos en fila empezando un poco más adelante de donde estaba la alcancía
+		# (i * 80) hace que se separen 80 píxeles una de la otra en línea recta
+		var x_moneda = alcancia_area.global_position.x + 150 + (i * 80)
+		nueva_moneda.position = Vector2(x_moneda, alcancia_area.global_position.y)
+		
+		call_deferred("add_child", nueva_moneda)"""
+func generar_fila_monedas():
+	for i in range(10):
+		var nueva_moneda = escena_moneda.instantiate()
+		
+		# --- EL TOQUE DE CAOS ---
+		# Hacemos que nazcan a distancias aleatorias hacia adelante (entre 50 y 600 píxeles)
+		var distancia_x = randf_range(50, 600)
+		
+		# Hacemos que se esparzan hacia arriba y hacia abajo del punto de choque
+		var variacion_y = randf_range(-150, 150) 
+		
+		# Calculamos la posición final sumando ese caos a la coordenada de la alcancía
+		var x_moneda = alcancia_area.global_position.x + distancia_x
+		var y_moneda = alcancia_area.global_position.y + variacion_y
+		
+		nueva_moneda.position = Vector2(x_moneda, y_moneda)
+		call_deferred("add_child", nueva_moneda)

@@ -11,3 +11,4 @@ func _on_button_1_pressed() -> void:
 func _on_button_2_pressed() -> void:
 	print("Regresando a la intro...")
 	get_tree().change_scene_to_file("res://menu_principal.tscn")
+ 

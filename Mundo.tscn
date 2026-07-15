@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cjm0rxoecu7w0" path="res://newmoneda.png" id="4_ak346"]
 [ext_resource type="Texture2D" uid="uid://bbgw1wdrqdk4w" path="res://Drake30.png" id="4_jlv7k"]
 [ext_resource type="Texture2D" uid="uid://bft83woah15d5" path="res://Drake31.png" id="5_ftdas"]
+[ext_resource type="Texture2D" uid="uid://dytnxft8kfc6i" path="res://alcansia.png" id="5_gi3ff"]
 [ext_resource type="Texture2D" uid="uid://c3oorfob07ucn" path="res://hurt0.png" id="5_ocdg6"]
 [ext_resource type="Texture2D" uid="uid://br66na221bbmd" path="res://hurt1.png" id="6_jnlhy"]
 [ext_resource type="Texture2D" uid="uid://3j8vbxpcmu3b" path="res://Drake32.png" id="6_ocdg6"]
@@ -58,6 +59,9 @@ expand_margin_left = 35.0
 expand_margin_top = 35.0
 expand_margin_right = 35.0
 expand_margin_bottom = 35.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jrtib"]
+radius = 39.012817
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lb1h3"]
 animations = [{
@@ -234,6 +238,18 @@ offset_bottom = 76.0
 texture = ExtResource("4_ak346")
 expand_mode = 1
 
+[node name="AlcanciaArea" type="Area2D" parent="." unique_id=613942796]
+
+[node name="Sprite2D" type="Sprite2D" parent="AlcanciaArea" unique_id=1622367306]
+z_index = 10
+position = Vector2(-0.49999905, 0.49999905)
+scale = Vector2(0.21854307, 0.18995634)
+texture = ExtResource("5_gi3ff")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AlcanciaArea" unique_id=1102274802]
+z_index = 10
+shape = SubResource("CircleShape2D_jrtib")
+
 [node name="Parallax2D" type="Parallax2D" parent="." unique_id=930798378]
 repeat_size = Vector2(1152, 0)
 autoscroll = Vector2(-250, 0)
@@ -308,5 +324,6 @@ autoplay = true
 [node name="itemMoto" parent="." unique_id=1233416707 instance=ExtResource("22_ws3pl")]
 position = Vector2(1075, 489)
 
+[connection signal="body_entered" from="AlcanciaArea" to="." method="_on_alcancia_area_body_entered"]
 [connection signal="area_entered" from="Jugador/DetectorPeligro" to="Jugador" method="_on_detector_peligro_area_entered"]
 [connection signal="timeout" from="GeneradorObstaculos" to="." method="_on_generador_obstaculos_timeout"]
