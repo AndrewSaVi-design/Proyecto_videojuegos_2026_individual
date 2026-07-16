@@ -55,7 +55,6 @@ func _on_jugador_choca():
 	var escena_loto = load("res://slot_machine.tscn")
 	var instancia_loto = escena_loto.instantiate()
 	
-	# --- EL CAMBIO ESTÁ EN ESTA LÍNEA ---
 	# Lo añadimos a la Interfaz para que se dibuje por encima de todo
 	$Interfaz.add_child(instancia_loto) 
 	
@@ -63,21 +62,40 @@ func _on_jugador_choca():
 	instancia_loto.resultado_decision.connect(_gestionar_resultado_loto)
 
 func _gestionar_resultado_loto(decision: String):
-	get_tree().paused = false # SIEMPRE despausamos antes de cambiar de escena o revivir
-	
 	if decision == "vida_extra":
+		# Esperamos 2.5 segundos para que el jugador vea las 3 cerezas
+		await get_tree().create_timer(2.5).timeout 
+		
+		# Después de esperar, despausamos el juego y revivimos al jugador
+		get_tree().paused = false 
+		
 		if jugador.has_method("revivir"):
 			jugador.revivir()
 		print("¡Vida extra concedida!")
+		
+		# Borramos la lotería de la pantalla
+		if $Interfaz.has_node("SlotMachine"):
+			$Interfaz.get_node("SlotMachine").queue_free()
+			
 	else:
-		# Cambiamos a la escena de Game Over. 
+		# Si la decisión es game_over (perdió o le dio a salir)
+		get_tree().paused = false # Siempre despausamos antes de cambiar de escena
 		get_tree().change_scene_to_file("res://game_over.tscn")
 # --------------------------------------------------------
 
 func _process(delta: float) -> void:
+	# --- NUEVO: CONTROL DINÁMICO DE VELOCIDAD PARA LA MOTO ---
+	if poder_activo:
+		multiplicador_velocidad = 10.0
+	elif jugador and jugador.en_moto:
+		multiplicador_velocidad = 2.5 # Ajusta este valor si la quieres más rápida o más lenta
+	else:
+		multiplicador_velocidad = 1.0
+	# ---------------------------------------------------------
+	
 	distancia += delta * 10.0 * multiplicador_velocidad
 	texto_distancia.text = str(int(distancia)) + " km"
-	print('alcancia_area.position: ', alcancia_area.position)
+	
 	if poder_activo and distancia >= meta_distancia_poder:
 		desactivar_poder()
 		
@@ -89,10 +107,6 @@ func _process(delta: float) -> void:
 		activar_alcancia()
 		
 	# --- MOVIMIENTO DE LA ALCANCÍA ---
-	#if alcancia_activa:
-	#	var velocidad_base = 700.0 # Misma velocidad rápida que tus obstáculos
-	#	alcancia_area.position.x -= velocidad_base * multiplicador_velocidad * delta
-	# --- MOVIMIENTO DE LA ALCANCÍA ---
 	if alcancia_activa:
 		# Le damos una velocidad estable (ajústala si la quieres más rápida o lenta)
 		var velocidad_base = 500.0 
@@ -103,6 +117,7 @@ func _process(delta: float) -> void:
 			alcancia_activa = false
 			alcancia_area.hide()
 			colision_alcancia.set_deferred("disabled", true)
+
 """
 func activar_alcancia():
 	print("Alcansia activada")
@@ -119,7 +134,9 @@ func activar_alcancia():
 		
 	# La hacemos visible y activamos su colisión
 	alcancia_area.show()
-	colision_alcancia.set_deferred("disabled", false)"""
+	colision_alcancia.set_deferred("disabled", false)
+"""
+
 func activar_alcancia():
 	alcancia_generada = true
 	alcancia_activa = true
@@ -257,7 +274,9 @@ func generar_fila_monedas():
 		var x_moneda = alcancia_area.global_position.x + 150 + (i * 80)
 		nueva_moneda.position = Vector2(x_moneda, alcancia_area.global_position.y)
 		
-		call_deferred("add_child", nueva_moneda)"""
+		call_deferred("add_child", nueva_moneda)
+"""
+
 func generar_fila_monedas():
 	for i in range(10):
 		var nueva_moneda = escena_moneda.instantiate()
