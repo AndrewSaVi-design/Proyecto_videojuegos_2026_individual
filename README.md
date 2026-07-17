@@ -2,34 +2,41 @@
 
 Un videojuego del género *Endless Runner* en dos dimensiones desarrollado en el motor **Godot Engine 4**. El proyecto implementa una arquitectura modular orientada a componentes (Nodos y Escenas), priorizando el desacoplamiento de código, la gestión dinámica de memoria y un sistema de dificultad progresiva escalable.
 
-## Características Clave e Implementación Lógica
+## Requisitos de Software
+* **Sistema Operativo:** Windows 10/11, macOS o Linux.
+* **Motor de Juego:** Godot Engine (Recomendado: **v4.6.2**).
+    * *Nota:* El proyecto es compatible con versiones superiores (4.7+). En caso de abrir el proyecto con una versión más reciente, el editor solicitará una actualización de archivos; favor seleccionar la opción **"Import & Edit"**.
+* **Control de Versiones:** Git (opcional, si se clona el repositorio).
+* **Git:** https://github.com/AndrewSaVi-design/Proyecto_videojuegos_2026_individual
 
-* **Arquitectura Modular:** Separación estricta de responsabilidades entre los subsistemas de Interfaz (HUD), Fondo (`Parallax2D`), Entidades Dinámicas (Obstáculos/Lasers/Monedas) y Físicas del Jugador.
-* **Sistema de Dualidad y Polaridad:** Implementación de mecánicas de cambio de traje (Cian y Naranja) asociadas a una validación lógica ante láseres de color coincidente, mitigando o aplicando penalizaciones por "Sobrecarga".
-* **Dificultad Progresiva Basada en Software:** Escalado físico de la velocidad de traslación global de los obstáculos en tiempo real en la función `_process(delta)`, segmentado en tres fases críticas (0-50 km, 50 km y 200+ km).
-* **Obstáculos con Transformación Angular:** Inclusión de barreras de plasma rectangulares con rotación angular aleatoria (`rotation_degrees`) calculada simétricamente sobre su eje central `(0,0)`.
+## Paso a Paso para la Instalación
 
----
+### 1. Obtención del Código Fuente
+Existen dos métodos para obtener los archivos:
+* **Método A (GitHub Desktop):**
+    1. Instalar [GitHub Desktop](https://desktop.github.com/).
+    2. En el repositorio, hacer clic en el botón verde **"Code"** y seleccionar **"Open with GitHub Desktop"**.
+    3. Elegir una ruta local en su computadora y clonar.
+* **Método B (Descarga Directa):**
+    1. En la página de GitHub, hacer clic en el botón verde **"Code"** y seleccionar **"Download ZIP"**.
+    2. Descomprimir el archivo en una carpeta de fácil acceso.
 
-## Estructura del Árbol de Escenas (Jerarquía de Nodos)
+### 2. Configuración en Godot Engine
+1. Abrir el ejecutable de **Godot Engine v4.6.2**.
+2. En el gestor de proyectos, hacer clic en el botón **"Import"** (Importar).
+3. Presionar el botón **"Browse"** (Explorar) y seleccionar la carpeta donde se descomprimió o clonó el proyecto.
+4. Asegurarse de que el campo "Project File" apunte al archivo `project.godot`.
+5. Hacer clic en **"Import & Edit"**.
 
-El diseño del espacio de trabajo en Godot sigue un patrón de composición jerárquico desacoplado:
+### 3. Ejecución del Juego
+1. Una vez dentro del editor, esperar a que el motor termine de importar los assets (la barra inferior debe finalizar).
+2. Para iniciar el juego, presionar la tecla **F5** o hacer clic en el botón **"Play"** (ícono de triángulo) en la esquina superior derecha.
 
-* **`Node2D` (Mundo):** Nodo controlador raíz que administra el estado global del juego y centraliza el servicio de spawning.
-* **`Interfaz` (`CanvasLayer`):** Capa de renderizado aislada para el HUD que fija en pantalla los componentes `TextoDistancia` y `TextoMonedas`.
-* **`Parallax2D`:** Controlador de desplazamiento infinito para la simulación de velocidad del entorno mediante el reciclaje cíclico de texturas.
-* **`Jugador` (`CharacterBody2D`):** Maneja los vectores de velocidad, gravedad y el impulso vertical del Jetpack.
-    * **`DetectorPeligro` (`Area2D`):** Sensor dedicado de forma exclusiva a la captura de señales de colisión (`body_entered`) con amenazas, previniendo conflictos mecánicos con el suelo.
-* **`Suelo` / `Techo` (`StaticBody2D`):** Delimitadores estáticos que confinan al personaje al área visible de juego.
-* **`GeneradorObstaculos` (`Timer`):** Temporizador encargado de disparar los eventos aleatorios utilizando una ruleta pseudoaleatoria (`randi() % 14`).
+## Controles
+* **Volar**: apretar la tecla barra espaciadora
+* **Acción:**
+* Cambiar de color: tecla C
+* Si tienes 5 monedas y deseas usar el comodin de avanzar 400 km presiona tecla enter, caso contrario tecla esc para que desaparezca
 
----
-
-## Métricas de Rendimiento y Optimización (Profiling)
-
-El software ha sido auditado mediante el Monitorizador nativo de Godot Engine para garantizar una ejecución eficiente en hardware:
-
-* **Tasa de Refresco:** 60 FPS estables (Sincronización vertical y fluidez visual continua).
-* **Tiempo de Ciclo (Frame Time):** 24.49 ms de procesamiento CPU/GPU por cuadro.
-* **Uso de Memoria Estática (RAM):** 61.62 MiB.
-* **Memoria de Video (VRAM):** 68.31 MiB.
+## Notas del Desarrollador
+Este proyecto utiliza el motor Godot y sigue las prácticas de control de versiones con Git.
