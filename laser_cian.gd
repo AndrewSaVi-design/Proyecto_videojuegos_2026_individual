@@ -1,51 +1,15 @@
 extends Area2D
 
-var ya_choco = false # <-- NUEVA VARIABLE: Evita que el choque se procese múltiples veces seguidas
-"""
-func _process(delta):
-	var velocidad_base = 300.0 # Velocidad inicial suave
-	var velocidad_final = velocidad_base
-	
-	# ESCALADO DE DIFICULTAD REAL HASTA LOS 400 KM
-	var mundo = get_tree().current_scene
-	if mundo and "distancia" in mundo:
-		if mundo.distancia >= 400:
-			velocidad_final += 400.0 # Extremo a los 400 km (Velocidad: 700)
-		elif mundo.distancia >= 200:
-			velocidad_final += 250.0 # Difícil a los 200 km (Velocidad: 550)
-		elif mundo.distancia >= 50:
-			velocidad_final += 120.0 # Intermedio a los 50 km (Velocidad: 420)
+var ya_choco = false # Evita que el choque se procese múltiples veces seguidas
 
-	# Se mueve con la velocidad calculada
-	position.x -= velocidad_final * delta
-	
-	if position.x < -100:
-		queue_free()"""
-		
 func _process(delta):
-	var velocidad_base = 300.0
-	var velocidad_final = velocidad_base
-	
-	# Escalado de dificultad normal
-	var mundo = get_tree().current_scene
-	if mundo and "distancia" in mundo:
-		if mundo.distancia >= 400:
-			velocidad_final += 400.0
-		elif mundo.distancia >= 200:
-			velocidad_final += 250.0
-		elif mundo.distancia >= 50:
-			velocidad_final += 120.0
-
-	# NUEVA LÓGICA: Si el mundo tiene un multiplicador de velocidad, lo aplicamos aquí
+	var velocidad_base = 340.0
 	var turbo = 1.0
+	var mundo = get_tree().current_scene
 	if mundo and "multiplicador_velocidad" in mundo:
 		turbo = mundo.multiplicador_velocidad
 
-	# MODIFICACIÓN AQUÍ: Añadimos la variable 'turbo' al movimiento
-	position.x -= velocidad_final * turbo * delta
-	
-	# Si es el obstáculo circular, también puedes acelerar su rotación si quieres:
-	# rotation_degrees += velocidad_rotacion * turbo * delta
+	position.x -= velocidad_base * turbo * delta
 	
 	if position.x < -200:
 		queue_free()
@@ -59,28 +23,15 @@ func _on_body_entered(body: Node2D) -> void:
 		verificar_polaridad(body)
 
 func verificar_polaridad(jugador):
-	print("Argumebnto de polaridad: ", jugador)
 	if ya_choco:
-		return # Si ya registramos una derrota, ignoramos colisiones extra
+		return
 		
-	print("--- CHOQUE DETECTADO ---")
-	
-	# Primero evaluamos las condiciones exactas de Game Over
 	var fallo_cian = is_in_group("laser_cian") and jugador.es_cian == false
 	var fallo_naranja = is_in_group("laser_naranja") and jugador.es_cian == true
 	
 	if fallo_cian or fallo_naranja:
 		ya_choco = true
-		#set_process(false) # Congela el movimiento de este láser para que no siga de largo
-		
-		# Le indicamos al jugador que ejecute su lógica de daño
 		if jugador.has_method("recibir_danio"):
 			jugador.recibir_danio()
-		
-		# Esperamos 1 segundo de manera asíncrona viendo la animación "hurt"
-		#await get_tree().create_timer(1.0).timeout
-		
-		# Cambiamos de escena oficialmente
-		#get_tree().change_scene_to_file("res://game_over.tscn")
 	else:
 		print("Resultado: SALVADO (Ambos son del mismo color)")

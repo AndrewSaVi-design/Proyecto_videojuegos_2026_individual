@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dnq0x7ukjavxr"]
 
-[ext_resource type="Texture2D" uid="uid://dqff2e2b2khch" path="res://ventanInstucciones.png" id="1_mfbnp"]
 [ext_resource type="Script" uid="uid://c85mf31fridvj" path="res://instrucciones.gd" id="1_tg8gq"]
+[ext_resource type="Texture2D" uid="uid://q4b6kek12a4i" path="res://Instrucciones_v3.jpg" id="2_tg8gq"]
 
 [node name="Control" type="Control" unique_id=1250361643]
 layout_mode = 3
@@ -19,7 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_mfbnp")
+texture = ExtResource("2_tg8gq")
 expand_mode = 1
 stretch_mode = 6
 

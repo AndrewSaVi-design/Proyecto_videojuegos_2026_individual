@@ -33,6 +33,12 @@ var escena_moneda = preload("res://moneda.tscn")
 var objetoCircular = preload("res://obstaculo_circular.tscn")
 var escena_moto = preload("res://item_moto.tscn") 
 
+# REFERENCIA DIRECTA A LA RULETA ACTIVA
+var loto_actual: Node = null
+
+# CONTROL DE APARICIÓN DE LA MOTO
+var ultima_distancia_moto: float = -200.0
+
 func _ready() -> void:
 	texto_monedas.text = "" + str(Global.monedas)
 	panel_compra.hide()
@@ -45,53 +51,51 @@ func _ready() -> void:
 	if Global.monedas >= 5:
 		mostrar_ventana_compra()
 		
-	# <--- CORRECCIÓN: Conectamos la señal de muerte con tu función de la lotería
 	jugador.jugador_murio.connect(_on_jugador_choca)
 
 # --- INTEGRACIÓN LOTERÍA: FUNCIÓN PARA CUANDO PIERDES ---
 func _on_jugador_choca():
-	get_tree().paused = true # Pausar el juego
+	if loto_actual != null:
+		return
+		
+	get_tree().paused = true
 	
 	var escena_loto = load("res://slot_machine.tscn")
-	var instancia_loto = escena_loto.instantiate()
+	loto_actual = escena_loto.instantiate()
 	
-	# Lo añadimos a la Interfaz para que se dibuje por encima de todo
-	$Interfaz.add_child(instancia_loto) 
-	
-	# Conectamos la señal definida en SlotMachine.gd
-	instancia_loto.resultado_decision.connect(_gestionar_resultado_loto)
+	$Interfaz.add_child(loto_actual) 
+	loto_actual.resultado_decision.connect(_gestionar_resultado_loto)
 
 func _gestionar_resultado_loto(decision: String):
 	if decision == "vida_extra":
-		# Esperamos 2.5 segundos para que el jugador vea las 3 cerezas
 		await get_tree().create_timer(2.5).timeout 
 		
-		# Después de esperar, despausamos el juego y revivimos al jugador
+		if is_instance_valid(loto_actual):
+			loto_actual.queue_free()
+		loto_actual = null
+		
 		get_tree().paused = false 
 		
 		if jugador.has_method("revivir"):
 			jugador.revivir()
 		print("¡Vida extra concedida!")
-		
-		# Borramos la lotería de la pantalla
-		if $Interfaz.has_node("SlotMachine"):
-			$Interfaz.get_node("SlotMachine").queue_free()
 			
 	else:
-		# Si la decisión es game_over (perdió o le dio a salir)
-		get_tree().paused = false # Siempre despausamos antes de cambiar de escena
+		loto_actual = null
+		get_tree().paused = false
 		get_tree().change_scene_to_file("res://game_over.tscn")
 # --------------------------------------------------------
 
 func _process(delta: float) -> void:
-	# --- NUEVO: CONTROL DINÁMICO DE VELOCIDAD PARA LA MOTO ---
+	# ACELERACIÓN PROGRESIVA SEGÚN KILÓMETROS (sube de 1.0x hasta 2.2x)
+	var escala_km = clamp(1.0 + (distancia / 600.0), 1.0, 2.2)
+	
 	if poder_activo:
 		multiplicador_velocidad = 10.0
 	elif jugador and jugador.en_moto:
-		multiplicador_velocidad = 2.5 # Ajusta este valor si la quieres más rápida o más lenta
+		multiplicador_velocidad = 2.2 * escala_km
 	else:
-		multiplicador_velocidad = 1.0
-	# ---------------------------------------------------------
+		multiplicador_velocidad = escala_km
 	
 	distancia += delta * 10.0 * multiplicador_velocidad
 	texto_distancia.text = str(int(distancia)) + " km"
@@ -100,51 +104,25 @@ func _process(delta: float) -> void:
 		desactivar_poder()
 		
 	if parallax_fondo:
-		parallax_fondo.scroll_offset.x -= 150.0 * delta * multiplicador_velocidad
+		parallax_fondo.scroll_offset.x -= 220.0 * delta * multiplicador_velocidad
 		
-	# --- LÓGICA DE ACTIVACIÓN ---
+	# --- LÓGICA DE ACTIVACIÓN ALCANCÍA ---
 	if distancia >= 100.0 and not alcancia_generada:
 		activar_alcancia()
 		
-	# --- MOVIMIENTO DE LA ALCANCÍA ---
 	if alcancia_activa:
-		# Le damos una velocidad estable (ajústala si la quieres más rápida o lenta)
 		var velocidad_base = 500.0 
 		alcancia_area.position.x -= velocidad_base * multiplicador_velocidad * delta
 		
-		# Si la alcancía pasa de largo (sale por la izquierda), la apagamos
 		if alcancia_area.position.x < -200:
 			alcancia_activa = false
 			alcancia_area.hide()
 			colision_alcancia.set_deferred("disabled", true)
 
-"""
-func activar_alcancia():
-	print("Alcansia activada")
-	alcancia_generada = true
-	alcancia_activa = true
-	
-	# La posicionamos a 1100 píxeles a la derecha del jugador
-	if jugador:
-		print('Se ejecuto jugador')
-		alcancia_area.position = Vector2(jugador.global_position.x + 1100, jugador.global_position.y)
-	else:
-		print("Se ejecutó el else")
-		alcancia_area.position = Vector2(1300, 300)
-		
-	# La hacemos visible y activamos su colisión
-	alcancia_area.show()
-	colision_alcancia.set_deferred("disabled", false)
-"""
-
 func activar_alcancia():
 	alcancia_generada = true
 	alcancia_activa = true
-	
-	# La forzamos a nacer a la derecha de la pantalla y al centro de altura
 	alcancia_area.position = Vector2(1300, 300)
-		
-	# La hacemos visible y activamos su colisión
 	alcancia_area.show()
 	colision_alcancia.set_deferred("disabled", false)	
 
@@ -189,23 +167,23 @@ func cerrar_ventana_compra():
 
 func _on_generador_obstaculos_timeout() -> void:
 	var suerte = randi() % 15 
-	var tiempo_espera_base = 1.2 
-	if distancia >= 400:
-		tiempo_espera_base = 0.4 
-	elif distancia >= 200:
-		tiempo_espera_base = 0.7 
-	elif distancia >= 50:
-		tiempo_espera_base = 0.9 
+	# El tiempo entre obstáculos también se reduce conforme aceleras
+	var tiempo_espera_base = clamp(1.3 / multiplicador_velocidad, 0.45, 1.3)
 	
-	if suerte == 14 and not jugador.en_moto:
+	# PREMIO POCO COMÚN: 1 de 45 intentos, después de 150 km y mínimo 300 km desde la última moto
+	var probabilidad_moto = (randi() % 45 == 0)
+	if probabilidad_moto and not jugador.en_moto and distancia >= 150.0 and (distancia - ultima_distancia_moto) >= 300.0:
+		ultima_distancia_moto = distancia
 		var instancia_moto = escena_moto.instantiate()
-		instancia_moto.position = Vector2(1200, 450) 
+		instancia_moto.position = Vector2(1200, 480) 
 		add_child(instancia_moto)
 		$GeneradorObstaculos.wait_time = tiempo_espera_base
 		
 	elif suerte < 4: 
+		# OBSTÁCULO NEUTRO: 60% de las veces aparece a ras del suelo para obligar a saltar
 		var nuevo_ob = escena_obstaculo.instantiate()
-		nuevo_ob.position = Vector2(1200, randf_range(150, 450))
+		var altura_ob = randf_range(470, 535) if randf() < 0.6 else randf_range(160, 420)
+		nuevo_ob.position = Vector2(1200, altura_ob)
 		add_child(nuevo_ob)
 		$GeneradorObstaculos.wait_time = tiempo_espera_base
 		
@@ -218,27 +196,29 @@ func _on_generador_obstaculos_timeout() -> void:
 		$GeneradorObstaculos.wait_time = tiempo_espera_base
 		
 	elif suerte < 9: 
-		var y_min = 150
-		var y_max = 400
+		var y_min = 160
+		var y_max = 510 # Llega hasta el suelo para obligar a saltar
 		var cantidad = randi_range(1, 2)
 		if cantidad == 1:
-			crear_peligro(laserHorizontal, true, randf_range(y_min, y_max))
+			# 50% de probabilidad de salir justo en el piso
+			var altura_laser = randf_range(470, 515) if randf() < 0.5 else randf_range(y_min, 380)
+			crear_peligro(laserHorizontal, true, altura_laser)
 		else:
-			var h1 = randf_range(y_min, 250)
-			var h2 = randf_range(300, y_max)
+			var h1 = randf_range(y_min, 280)
+			var h2 = randf_range(450, y_max)
 			crear_peligro(laserHorizontal, true, h1)
 			crear_peligro(laserHorizontal, true, h2)
-		$GeneradorObstaculos.wait_time = 4.5 
+		$GeneradorObstaculos.wait_time = clamp(3.8 / multiplicador_velocidad, 1.8, 3.8)
 		
 	elif suerte < 11: 
 		var nueva_moneda = escena_moneda.instantiate()
-		nueva_moneda.position = Vector2(1200, randf_range(180, 420))
+		nueva_moneda.position = Vector2(1200, randf_range(180, 480))
 		add_child(nueva_moneda)
 		$GeneradorObstaculos.wait_time = 0.5 
 		
 	else: 
 		var instancia_circular = objetoCircular.instantiate()
-		instancia_circular.position = Vector2(1200, randf_range(150, 450))
+		instancia_circular.position = Vector2(1200, randf_range(160, 510))
 		instancia_circular.rotation_degrees = randf_range(0.0, 360.0)
 		add_child(instancia_circular)
 		$GeneradorObstaculos.wait_time = tiempo_espera_base
@@ -251,46 +231,22 @@ func crear_peligro(escena, es_horizontal, altura_specifica = 0):
 		instancia.position.x = 570
 		instancia.position.y = altura_specifica
 	else:
-		instancia.position = Vector2(1200, randf_range(100, 500))
+		instancia.position = Vector2(1200, randf_range(120, 520))
 	add_child(instancia)
 
-
 func _on_alcancia_area_body_entered(body: Node2D) -> void:
-	# Si lo que chocó fue el jugador (o la moto)
 	if body.name == "Jugador" or body.is_in_group("Player"):
 		alcancia_activa = false
-		alcancia_area.hide() # Desaparecemos la alcancía
-		colision_alcancia.set_deferred("disabled", true) # Apagamos su colisión
-		
+		alcancia_area.hide()
+		colision_alcancia.set_deferred("disabled", true)
 		generar_fila_monedas()
-		
-"""
-func generar_fila_monedas():
-	for i in range(10):
-		var nueva_moneda = escena_moneda.instantiate()
-		
-		# Las colocamos en fila empezando un poco más adelante de donde estaba la alcancía
-		# (i * 80) hace que se separen 80 píxeles una de la otra en línea recta
-		var x_moneda = alcancia_area.global_position.x + 150 + (i * 80)
-		nueva_moneda.position = Vector2(x_moneda, alcancia_area.global_position.y)
-		
-		call_deferred("add_child", nueva_moneda)
-"""
 
 func generar_fila_monedas():
 	for i in range(10):
 		var nueva_moneda = escena_moneda.instantiate()
-		
-		# --- EL TOQUE DE CAOS ---
-		# Hacemos que nazcan a distancias aleatorias hacia adelante (entre 50 y 600 píxeles)
 		var distancia_x = randf_range(50, 600)
-		
-		# Hacemos que se esparzan hacia arriba y hacia abajo del punto de choque
 		var variacion_y = randf_range(-150, 150) 
-		
-		# Calculamos la posición final sumando ese caos a la coordenada de la alcancía
 		var x_moneda = alcancia_area.global_position.x + distancia_x
-		var y_moneda = alcancia_area.global_position.y + variacion_y
-		
+		var y_moneda = clamp(alcancia_area.global_position.y + variacion_y, 120, 500)
 		nueva_moneda.position = Vector2(x_moneda, y_moneda)
 		call_deferred("add_child", nueva_moneda)
